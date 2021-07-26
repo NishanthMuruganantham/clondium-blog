@@ -17,6 +17,13 @@
     <link href="{% static 'blog/mediumish/css/mediumish.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merienda+One">
+
+    {% block headcontent %}
+    
+    {% endblock %}
+
+
+
 </head>
 <body>
 <!-- Begin Nav
@@ -58,7 +65,7 @@
             <!-- End Menu -->
         </div>
     </div>
-    
+    {% if user.is_authenticated %}
     <ul class="navbar-nav ml-auto">
         <li  class="nav-item dropdown ml-auto">
             <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img src="{% static 'blog/mediumish/img/Default_Profile.png' %}" class="avatar" alt="Avatar" > Paula Wilson <b class="caret"></b></a>
@@ -71,6 +78,14 @@
             </div>
         </li>
     </ul>
+    {% else %}
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:user_login' %}">Login</a>
+        </li>
+    </ul>
+    {% endif %}
+    
 </nav>
 <!-- End Nav
 ================================================== -->
