@@ -1,8 +1,45 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model, authenticate
+from django.forms import widgets
 
 User = get_user_model()
+
+
+
+class SignupForm(UserCreationForm):
+    
+    password1 = forms.CharField(label = "Password", widget = forms.PasswordInput(
+        attrs = {'class': 'input100'}
+    ))
+    
+    password2 = forms.CharField(label = "Confirm Password", widget = forms.PasswordInput(
+        attrs = {'class': 'input100'}
+    ))
+    
+    class Meta:
+        model = User
+        fields = ('email','username','password1','password2')
+        
+        widgets = {
+            'username': forms.TextInput(
+                attrs={'class':'input100'}
+            ),
+            'email': forms.EmailInput(
+                attrs={'class':'input100'}
+            ),
+            'password1': forms.PasswordInput(
+                attrs={'class':'input100'}
+            ),
+            'password2': forms.PasswordInput(
+                attrs={'class':'input100'}
+            )
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+
 
 class LoginForm(AuthenticationForm):
     def clean(self):
