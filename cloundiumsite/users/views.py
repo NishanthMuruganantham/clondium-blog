@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 from django.views import View
+from django.contrib.auth import views as auth_views
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -59,36 +60,10 @@ def activate_user(request, uidb64, token):
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username,password=password)
-        if user:
-            if user.is_active:
-                login(request,user)
-                return redirect(reverse('home')) 
-            else:
-                messages.error(request,'Please click the link in the activation mail sent to your registered mail id to activate your account')
-                return redirect(reverse('home'))
-        else:
-            messages.error(request,'username or password not correct')
-            return redirect(reverse('home'))
-    else:
-        form = LoginForm()
-    return render(request,'users/login.html',{'form':form})
-
-
-class LoginView(View):
-    
-    #form_class = LoginForm
-    template_name = 'users/login.html'
-    
-    def post(self, request):
-        form = LoginForm(request.POST)
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
             user = authenticate(username=username,password=password)
-            print(user)
             if user:
                 if user.is_active:
                     login(request,user)
@@ -99,12 +74,16 @@ class LoginView(View):
             else:
                 messages.error(request,'username or password not correct')
                 return redirect(reverse('home'))
-        return HttpResponse('failed')
-    
-    def get(self, request):
+        else:
+            return HttpResponse('login failed')
+    else:
         form = LoginForm()
-        return render(request, self.template_name, {'form': form})
-        
+    return render(request,'users/login.html',{'form':form})
+
+
+class LoginView(auth_views.LoginView):
+    form_class = LoginForm
+    template_name = 'users/login.html'
 
 
 #* SIGNUP WITH EMAIL AUTHENTICATION

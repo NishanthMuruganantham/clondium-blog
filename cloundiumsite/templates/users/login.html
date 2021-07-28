@@ -30,21 +30,29 @@
 <div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 p-b-20">
-				<form class="login100-form validate-form" method="POST">
+				<form class="login100-form validate-form" method="POST" >
                     {% csrf_token %}
 
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors  %}
+                            <p style="color:red">{{ error }}</p>
+                        {% endfor %}
+                        <br>
+                    {% endif %}
+                    
+                    <!-- <p style="color:red">{{form.errors.as_text}}</p> -->
 					<span class="login100-form-avatar form-title p-b-70">
 						<img src="{% static 'users/login/images/login_avatar.png' %}" alt="AVATAR">
 					</span>
 
 					<div class="wrap-input100 validate-input m-t-70 m-b-35" data-validate = "Enter username">
-						<input class="input100" type="text" name="username" id="username">
-                        <!-- {{form.username}} -->
+						<!-- <input class="input100" type="text" name="username" id="username"> -->
+                        {{form.username}}
 						<span class="focus-input100" data-placeholder="Username"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-50" data-validate="Enter password">
-						<input class="input100" type="password" name="password">
+						{{form.password}}
 						<span class="focus-input100" data-placeholder="Password"></span>
 					</div>
 
@@ -70,12 +78,11 @@
 								Don’t have an account?
 							</span>
 
-							<a href="#" class="txt2">
+							<a href="{% url 'users:user_signup' %}" class="txt2">
 								Sign up
 							</a>
 						</li>
 					</ul>
-				
 			</div>
 		</div>
 	</div>
