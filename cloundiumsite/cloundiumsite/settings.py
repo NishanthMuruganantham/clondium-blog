@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'posts',
+    'ckeditor',
     'crispy_forms',
 ]
 
@@ -150,3 +151,78 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
+
+
+CKEDITOR_CONFIGS = {
+    'default' : {
+        'skin': 'moono-lisa',
+        'toolbar_Basic': [
+            ['Source', '-', 'Bold', 'Italic']
+        ],
+        
+        'toolbar_YourCustomToolbarConfig': [
+                
+                {
+                    'name':'basic',
+                    'items': ['Styles', 'Format',],
+                },
+                {
+                    'name': 'basicstyles',
+                    'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript']
+                },
+                {
+                    'name': 'styles',
+                    'items': ['Font', 'FontSize', ]
+                },
+                {
+                    'name': 'colors',
+                    'items': ['TextColor', 'BGColor','-', 'RemoveFormat','Undo', 'Redo']
+                },
+                {
+                    'name' : 'indentation',
+                    'items' : ['Image','Table', 'CodeSnippet', 'HorizontalRule', 'Smiley', 'SpecialChar',  'BidiRtl',]
+                },
+                {
+                    'name': 'links',
+                    'items': ['Link', 'Unlink', 'Anchor']
+                },
+                {
+                    'name': 'paragraph',
+                    'items': [
+                        'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                        ]
+                },
+                
+                {
+                    'name' : 'indentation',
+                    'items' : ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',]
+                },
+                {
+                    'name': 'tools',
+                    'items': ['Preview','Maximize', 'ShowBlocks','Source','prism']
+                },
+            ],
+        
+        'extraPlugins':'prism',
+        'extraPlugins': ','.join([
+            'uploadimage', # the upload image feature
+            # your extra plugins here
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            'codesnippet',
+            #'prism',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath'
+        ]),
+        'codeSnippet_theme': 'monokai',
+        'toolbar': 'YourCustomToolbarConfig',
+        'toolbarCanCollapse': True,
+    }
+}

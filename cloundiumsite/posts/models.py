@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils.text import slugify
 from ckeditor.fields import RichTextField
+import readtime
 
 User = get_user_model()
 
@@ -34,4 +35,8 @@ class Post(models.Model):
         super().save(*args, **kwargs)
     
     def get_absolute_url(self):
-        return reverse('posts:post_detail',kwargs={'pk':self.pk,'slug':self.slug})
+        return reverse('posts:post_detail',kwargs = {'pk':self.pk, 'slug':self.slug})
+    
+    def get_readtime(self):
+        result = readtime.of_html(self.content)
+        return result.text
