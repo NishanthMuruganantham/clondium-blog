@@ -176,7 +176,7 @@ CKEDITOR_CONFIGS = {
                 },
                 {
                     'name': 'colors',
-                    'items': ['TextColor', 'BGColor','-', 'RemoveFormat','Undo', 'Redo']
+                    'items': ['TextColor', 'BGColor']
                 },
                 {
                     'name' : 'indentation',
@@ -201,6 +201,10 @@ CKEDITOR_CONFIGS = {
                     'name': 'tools',
                     'items': ['Preview','Maximize', 'ShowBlocks','Source','prism']
                 },
+                {
+                    'name': 'formatting',
+                    'items': ['RemoveFormat','Undo', 'Redo']
+                },
             ],
         
         'extraPlugins':'prism',
@@ -224,5 +228,7 @@ CKEDITOR_CONFIGS = {
         'codeSnippet_theme': 'monokai',
         'toolbar': 'YourCustomToolbarConfig',
         'toolbarCanCollapse': True,
+        'width' : 'auto',
+        'height' : '200px',
     }
 }

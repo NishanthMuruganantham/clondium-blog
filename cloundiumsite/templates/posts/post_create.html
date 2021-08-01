@@ -1,7 +1,14 @@
 {% extends "layout.html" %}
+{% load static %}
+{% block headcontent %}
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+
+    <!-- Main CSS-->
+    <link href="{% static 'blog/colorlib_form/css/main.css' %}" rel="stylesheet" media="all">
+{% endblock %}
 
 {% block content %}
-<div class="container">
+<!-- <div class="container">
     <h2>
         Create a new post
     </h2>
@@ -11,5 +18,71 @@
         {{ form.as_p }}
         <input type="submit" value="Post" class="btn btn-primary">
     </form>
+</div> -->
+
+<div class="page-wrapper bg-color p-t-100 p-b-50">
+    <div class="wrapper wrapper--w1000">
+        <div class="card card-6">
+            <div class="card-heading">
+                <!-- <h2 class="title">Apply for job</h2> -->
+                <h1 class="title">Write your blog...</h1>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="name">Blog Title</div>
+                        <div class="value">
+                            <!-- <input class="input--style-6" type="text" name="full_name"> -->
+                            {{form.title}}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="name">Category</div>
+                        <div class="value">
+                            
+                                <!-- <input class="input--style-6" type="email" name="email" placeholder="example@email.com"> -->
+                                {{form.category}}
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="name">Blog Content</div>
+                        <div class="value">
+                            <div class="input-group" width='90px'>
+                                {{form.media}}
+                                {{form.content}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="name">Banner Image</div>
+                        <div class="value">
+                            <div class="input-group js-input-file">
+                                <!-- <input class="input-file" type="file" name="file_cv" id="file"> -->
+                                {{form.header_image}}
+                                <!-- <label class="label--file" for="file">Choose file</label>
+                                <span class="input-file__info">No file chosen</span> -->
+                            </div>
+                            <div class="label--desc">Upload your CV/Resume or any other relevant file. Max file size 50 MB</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        
+                        <div class="value">
+                            <input type="submit" value="Publish" class="btn btn--radius-2 btn--blue-2">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <!-- <button class="btn btn--radius-2 btn--blue-2" type="submit">Send Application</button> -->
+                
+            </div>
+        </div>
+    </div>
 </div>
+
 {% endblock %}

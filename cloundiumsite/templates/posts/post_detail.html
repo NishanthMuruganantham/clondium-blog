@@ -55,7 +55,7 @@
 				<!-- Begin Top Meta -->
 				<div class="row post-top-meta">
 					<div class="col-md-2">
-						<a href="author.html"><img class="author-thumb" src="https://www.gravatar.com/avatar/e56154546cf4be74e393c62d1ae9f9d4?s=250&amp;d=mm&amp;r=x" alt="Sal"></a>
+						<img class="author-thumb" src="{{post.author.profile_picture.url}}" alt="Sal">
 					</div>
 					<div class="col-md-10">
 						<a class="link-dark" href="author.html">{{post.author.username}}</a><a href="#" class="btn follow">Follow</a>
@@ -71,11 +71,13 @@
 
 			</div>
             
-            
-			<!-- Begin Featured Image -->
-			<img class="featured-image img-fluid" src="{{post.header_image.url}}" alt="">
-			<!-- End Featured Image -->
-            <br>
+            {% if post.header_image %}
+                <!-- Begin Featured Image -->
+                <img class="featured-image img-fluid" src="{{post.header_image.url}}" alt="">
+                <!-- End Featured Image -->
+                <br>
+            {% endif %}
+			
 			<!-- Begin Post Content -->
 			<div class="article-post">
 				{{post.content|safe}}
