@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.contrib.auth import get_user_model, authenticate
 from django.forms import widgets
 
@@ -91,3 +91,34 @@ class LoginForm(AuthenticationForm):
     #                 )
 
     #     return self.cleaned_data
+
+
+
+class ProfileEditForm(UserChangeForm):
+    profile_picture = forms.ImageField(label=('profile_picture'),error_messages = {'invalid':("Image files only")}, widget=forms.FileInput)
+    class Meta:
+        fields = ('username','first_name','last_name','email','profile_picture')
+        model = User
+        
+        widgets = {
+            'username': forms.TextInput(
+                attrs = {'class': 'form-control'}
+            ),
+            'first_name' : forms.TextInput(
+                attrs = {'class': 'form-control'}
+            ),
+            'last_name' : forms.TextInput(
+                attrs = {'class': 'form-control'}
+            ),
+            'email' : forms.TextInput(
+                attrs = {'class': 'form-control'}
+            ),
+            # 'date_joined' : forms.TextInput(
+            #     attrs = {'class': 'form-control'}
+            # )
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].disabled = True
+        

@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
-from django.views import View
+from django.views import View, generic
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import PasswordResetForm
 
@@ -15,7 +15,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.core.mail import EmailMessage
 from django.contrib.auth.tokens import default_token_generator
 
-from .forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm, ProfileEditForm
 from .tokens import account_activation_token
 
 
@@ -148,3 +148,19 @@ class PasswordChangeView(View):
     def get(self, request):
         password_reset_form = PasswordResetForm()
         return render(request, self.template_name, {'form': password_reset_form})
+
+
+class ProfileEditView(generic.UpdateView):
+    model = User
+    form_class = ProfileEditForm
+    template_name = 'users/account_settings.html'
+    success_url = reverse_lazy('users:account_settings')
+    
+    # def form_valid(self,form):
+    #     self.object = form.save(commit=False)
+    #     self.object.user = self.request.user
+    #     self.object.save()
+    #     return super().form_valid(form)
+    
+    def get_object(self):
+        return self.request.user

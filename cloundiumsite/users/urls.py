@@ -13,6 +13,7 @@ urlpatterns = [
     path('activate/<uidb64>/<token>/', views.activate_user, name='activate'),
     path('change-password/', views.PasswordChangeView.as_view(), name='change_password'),
     
+    
     path(
         'change-password-mail-sent/',
         auth_views.PasswordResetDoneView.as_view(
@@ -37,4 +38,6 @@ urlpatterns = [
         ),
         name = 'password_reset_complete'
     ),
+    
+    path('account-settings/',views.ProfileEditView.as_view(), name = 'account_settings'),
 ]
