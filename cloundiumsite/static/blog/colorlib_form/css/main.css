@@ -384,9 +384,10 @@ h6 {
 }
 
 .btn--pill {
-  -webkit-border-radius: 20px;
+  -webkit-border-radius: 120px;
   -moz-border-radius: 20px;
   border-radius: 20px;
+  
 }
 
 .btn--green {
@@ -403,10 +404,12 @@ h6 {
 
 .btn--blue:hover {
   background: #3868cd;
+  
 }
 
 .btn--blue-2 {
   background: #2c6ed5;
+  width: 120px;
 }
 
 .btn--blue-2:hover {
@@ -420,6 +423,8 @@ h6 {
 .btn--red:hover {
   background: #eb3746;
 }
+
+
 
 /* ==========================================================================
    #DATE PICKER

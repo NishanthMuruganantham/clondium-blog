@@ -225,7 +225,7 @@ CKEDITOR_CONFIGS = {
             'dialogui',
             'elementspath'
         ]),
-        'codeSnippet_theme': 'monokai',
+        'codeSnippet_theme': 'monokai_sublime',
         'toolbar': 'YourCustomToolbarConfig',
         'toolbarCanCollapse': True,
         'width' : 'auto',

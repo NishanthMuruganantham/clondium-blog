@@ -9,6 +9,13 @@ def home(request):
 
 
 
+class PostListView(generic.ListView):
+    model = Post
+    context_object_name = "post_list"
+    template_name = 'posts/post_list.html'
+
+
+
 class PostCreateView(generic.CreateView):
     model = Post
     template_name = "posts/post_create.html"
@@ -25,3 +32,13 @@ class PostCreateView(generic.CreateView):
 class PostDetailView(generic.DetailView):
     model = Post
     template_name = "posts/post_detail.html"
+
+
+
+class PostUpdateView(generic.UpdateView):
+    model = Post
+    template_name = "posts/post_update.html"
+    form_class = PostCreationForm
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(author=self.request.user)

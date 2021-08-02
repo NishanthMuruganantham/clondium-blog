@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% load static %}
+
+
+{% block headcontent %}
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+
+    <!-- Main CSS-->
+    <link href="{% static 'blog/colorlib_form/css/main.css' %}" rel="stylesheet" media="all">
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="page-wrapper bg-color p-t-100 p-b-50">
+    <div class="wrapper wrapper--w1000">
+        <div class="card card-6">
+            <div class="card-heading">
+                <h1 class="title">Write your blog...</h1>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="name">Blog Title</div>
+                        <div class="value">
+                            {{form.title}}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="name">Category</div>
+                        <div class="value">
+                                {{form.category}}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="name">Blog Content</div>
+                        <div class="value">
+                            <div class="input-group" width='90px'>
+                                {{form.media}}
+                                {{form.content}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="name">Banner Image</div>
+                        <div class="value">
+                            <div class="input-group js-input-file">
+                                {{form.header_image}}
+                            </div>
+                            <div class="label--desc">Upload your CV/Resume or any other relevant file. Max file size 50 MB</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="value">
+                            <input type="submit" value="Publish" class="btn btn--pill btn--blue-2">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

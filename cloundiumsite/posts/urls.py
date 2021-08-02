@@ -6,8 +6,9 @@ from . import views
 app_name = 'posts'
 
 urlpatterns = [
-    path('',views.home, name='home'),
+    path('',views.PostListView.as_view(), name='home'),
     path('posts/new', views.PostCreateView.as_view(), name='post_create'),
     path('posts/<pk>/<slug>/', views.PostDetailView.as_view(), name='post_detail'),
+    path('posts/<pk>/<slug>/edit', views.PostUpdateView.as_view(), name='post_update'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

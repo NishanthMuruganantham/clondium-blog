@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+<ul>
+    {% for post in post_list %}
+        <li>
+            <a href="{% url 'posts:post_detail' pk=post.pk slug=post.slug %}">{{ post.title }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
