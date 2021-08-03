@@ -232,3 +232,7 @@ CKEDITOR_CONFIGS = {
         'height' : '200px',
     }
 }
+
+
+
+DATE_INPUT_FORMATS = ['%d-%m-%Y']

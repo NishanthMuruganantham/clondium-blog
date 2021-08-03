@@ -10,7 +10,8 @@
 
 <!-- Begin Article
 ================================================== -->
-<div class="container">
+<body>
+<div class="container bg-color">
 	<div class="row">
 
 		<!-- Begin Fixed Left Share -->
@@ -59,7 +60,11 @@
 					</div>
 					<div class="col-md-10">
 						<a class="link-dark" href="author.html">{{post.author.username}}</a><a href="#" class="btn follow">Follow</a>
-						<span class="author-description">Founder of WowThemes.net and creator of <b>"Mediumish"</b> theme that you're currently previewing. Developing professional premium themes, templates, plugins, scripts since 2012.</span>
+						<span class="author-description">
+                            {% if post.author.bio %}
+                                {{post.author.bio|safe}}
+                            {% endif %}
+                        </span>
 						<span class="post-date">{{post.created_time}}</span><span class="dot"></span><span class="post-read">{{post.get_readtime}} read</span>
                         <a href="{% url 'posts:post_update' pk=post.pk slug=post.slug %}">Edit</a>
 					</div>
@@ -101,6 +106,7 @@
 
 	</div>
 </div>
+</body>
 <!-- End Article -->
 
 

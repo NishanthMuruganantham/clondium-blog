@@ -43,6 +43,17 @@ class UserAccount(AbstractUser):
     first_name      = models.CharField(max_length = 30, null = True, blank = True)
     last_name       = models.CharField(max_length = 30, null = True, blank = True)
     
+    bio             = models.TextField(max_length = 255, blank = True, null = True)
+    date_of_birth   = models.DateField(blank = True, null = True)
+    website         = models.URLField(blank = True, null = True)
+    
+    facebook        = models.URLField(blank = True, null = True)
+    instagram       = models.URLField(blank = True, null = True)
+    twitter         = models.URLField(blank = True, null = True)
+    google_plus     = models.URLField(blank = True, null = True)
+    linkedin        = models.URLField(blank = True, null = True)
+    github          = models.URLField(blank = True, null = True)
+    
     objects = AccountManager()
     
     USERNAME_FIELD  = "email"

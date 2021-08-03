@@ -2,6 +2,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.contrib.auth import get_user_model, authenticate
 from django.forms import widgets
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout
+from crispy_forms.bootstrap import Tab, TabHolder
+from django.conf import settings
 
 User = get_user_model()
 
@@ -67,37 +71,17 @@ class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         self.error_messages['invalid_login'] = 'username or passoword is invalid'
         super().__init__(*args, **kwargs)
-    
-    # def clean(self):
-    #     username = self.cleaned_data.get('username')
-    #     password = self.cleaned_data.get('password')
-
-    #     if username is not None and password:
-    #         self.user_cache = authenticate(self.request, username=username, password=password)
-    #         if self.user_cache is None:
-    #             try:
-    #                 user_temp = User.objects.get(email=username)
-    #                 print(user_temp)
-    #             except:
-    #                 user_temp = None
-
-    #             if user_temp is not None:
-    #                     self.confirm_login_allowed(user_temp)
-    #             else:
-    #                 raise forms.ValidationError(
-    #                     self.error_messages['invalid_login'],
-    #                     code='invalid_login',
-    #                     params={'username': self.username_field.verbose_name},
-    #                 )
-
-    #     return self.cleaned_data
-
 
 
 class ProfileEditForm(UserChangeForm):
     profile_picture = forms.ImageField(label=('profile_picture'),error_messages = {'invalid':("Image files only")}, widget=forms.FileInput)
+    
     class Meta:
-        fields = ('username','first_name','last_name','email','profile_picture')
+        fields = (
+            'username','first_name','last_name','email','profile_picture',
+            'date_of_birth','bio','website',
+            'facebook','instagram','linkedin','google_plus','twitter','github',
+        )
         model = User
         
         widgets = {
@@ -113,12 +97,39 @@ class ProfileEditForm(UserChangeForm):
             'email' : forms.TextInput(
                 attrs = {'class': 'form-control'}
             ),
-            # 'date_joined' : forms.TextInput(
-            #     attrs = {'class': 'form-control'}
-            # )
+            'date_of_birth' : forms.DateInput(
+                attrs = {'class': 'form-control','id':'datepicker'}
+            ),
+            'bio' : forms.Textarea(
+                attrs = {'class': 'form-control'}
+            ),
+            'website' : forms.URLInput(
+                attrs = {'class': 'form-control'}
+            ),
+            'facebook' : forms.URLInput(
+                attrs = {'class': 'form-control'}
+            ),
+            'twitter' : forms.URLInput(
+                attrs = {'class': 'form-control'}
+            ),
+            'instagram' : forms.URLInput(
+                attrs = {'class': 'form-control'}
+            ),
+            'google_plus' : forms.URLInput(
+                attrs = {'class': 'form-control'}
+            ),
+            'linkedin' : forms.URLInput(
+                attrs = {'class': 'form-control'}
+            ),
+            'github' : forms.URLInput(
+                attrs = {'class': 'form-control'}
+            )
         }
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email'].disabled = True
-        
+        self.fields['first_name'].required = False
+        self.fields['bio'].widget.attrs['style']  = 'width:500px;height: 120px'
+
+
