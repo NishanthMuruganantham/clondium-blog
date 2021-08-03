@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import Post, Comment
 
 
 class PostCreationForm(forms.ModelForm):
@@ -27,3 +27,13 @@ class PostCreationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['header_image'].required = False
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('content',)
+        
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control','rows': 6, 'cols':10})
+        }
