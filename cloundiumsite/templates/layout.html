@@ -73,7 +73,7 @@
     {% if user.is_authenticated %}
     <ul class="navbar-nav ml-auto">
         <li  class="nav-item dropdown ml-auto">
-            <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img src="{% static 'blog/mediumish/img/Default_Profile.png' %}" class="avatar" alt="Avatar" > Paula Wilson <b class="caret"></b></a>
+            <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img src="{% static 'blog/mediumish/img/Default_Profile.png' %}" class="avatar" alt="Avatar" > {{user.username}}<b class="caret"></b></a>
             <div class="dropdown-menu"> 
                 <a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a>
                 <a href="#" class="dropdown-item"><i class="fa fa-calendar-o"></i> Calendar</a>

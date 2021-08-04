@@ -33,17 +33,20 @@ class PostCreateView(generic.CreateView):
 class PostDetailView(generic.DetailView):
     model = Post
     template_name = "posts/post_detail.html"
+    form = CommentForm
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['comment_form'] = CommentForm(instance=self.request.user)
-    
+        return context
     def post(self, request, *args, **kwargs):
         form = CommentForm(request.POST)
         blog_post = self.get_object()
         form.instance.commenter = request.user
         form.instance.post = blog_post
+        print('wcwedfcame')
+        form.save()
         return redirect(reverse('posts:post_detail',kwargs={'pk':blog_post.pk,'slug':blog_post.slug}))
 
 
