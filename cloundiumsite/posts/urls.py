@@ -7,6 +7,7 @@ app_name = 'posts'
 
 urlpatterns = [
     path('load-more-data',views.load_more_data,name='load_more_data'),
+    path('load-more-comments',views.load_more_comments,name='load_more_comments'),
     path('',views.PostListView.as_view(), name='home'),
     path('posts/new', views.PostCreateView.as_view(), name='post_create'),
     path('posts/<pk>/<slug>/', views.PostDetailView.as_view(), name='post_detail'),

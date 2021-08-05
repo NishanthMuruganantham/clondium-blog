@@ -1,0 +1,15 @@
+{% for comment in data %}
+    <div class="commented-section mt-2 comment-box">
+        <div class="d-flex flex-row align-items-center commented-user">
+            <h5 class="mr-2">{{comment.commenter.username}}</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">{{comment.commented_at|timesince}}</span>
+        </div>
+        <div class="comment-text-sm"><span>{{comment.content|safe|linebreaksbr}}</span></div>
+        <div class="reply-section">
+            <div class="d-flex flex-row align-items-center voting-icons"><a href="#"><img src="https://img.icons8.com/material-outlined/24/4a90e2/facebook-like--v1.png"/></a>15<i class="fa fa-sort-down fa-2x mb-3 hit-voting"></i><span class="ml-2">15</span><span class="dot ml-2"></span>
+                <h6 class="ml-2 mt-1">Reply</h6>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <br>
+{% endfor %}

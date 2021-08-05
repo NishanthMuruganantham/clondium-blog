@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import generic
 from .models import Post
@@ -85,4 +85,23 @@ def load_more_data(request):
 	data=Post.objects.all().order_by('-pk')[offset:offset+limit]
 	t=render_to_string('posts/sample.html',{'data':data})
 	return JsonResponse({'data':t}
+)
+
+
+
+
+# Load More
+def load_more_comments(request):
+    print("called")
+    post_id = int(request.GET['blog_post_id'])
+    print(post_id)
+    post = get_object_or_404(Post,pk=post_id)
+    offset=int(request.GET['offset'])
+    print(post)
+    print(offset)
+    limit=int(request.GET['limit'])
+    data=post.comments.all().order_by('id')[offset:offset+limit]
+    print(data)
+    t=render_to_string('posts/sample2.html',{'data':data})
+    return JsonResponse({'data':t}
 )
