@@ -52,11 +52,22 @@ class PostDetailView(generic.DetailView):
     template_name = "posts/post_detail.html"
     form = CommentForm
     
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        blog_post = get_object_or_404(Post,pk=self.kwargs['pk'])
+        post_is_liked = False
+        if blog_post.likes.filter(id = self.request.user.id).exists():
+            post_is_liked = True
+        context['total_post_likes'] = blog_post.number_of_likes()
+        context['post_is_liked'] = post_is_liked
+        
         if self.request.user.is_authenticated:
             context['comment_form'] = CommentForm(instance=self.request.user)
         return context
+    
+    
     def post(self, request, *args, **kwargs):
         form = CommentForm(request.POST)
         blog_post = self.get_object()
@@ -105,3 +116,15 @@ def load_more_comments(request):
     t=render_to_string('posts/sample2.html',{'data':data})
     return JsonResponse({'data':t}
 )
+
+#* POST LIKE VIEW
+def post_like_view(request):
+    post_id = int(request.GET['postid'])
+    post_slug = request.GET['postslug']
+    post = get_object_or_404(Post,id=post_id)
+    print(request.user.id)
+    if post.likes.filter(id = request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return redirect(reverse('posts:post_detail',kwargs={'pk':post_id,'slug':post_slug}))

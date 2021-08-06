@@ -26,6 +26,7 @@ class Post(models.Model):
     header_image = models.ImageField(blank = True, null = True, upload_to='posts/images/')
     slug = models.SlugField(allow_unicode = True, unique = False)
     category = models.ForeignKey(Category, on_delete = models.CASCADE, default=1, related_name='posts')
+    likes = models.ManyToManyField(User,related_name='post')
     
     def __str__(self):
         return f"{self.title} by {self.author}"
@@ -40,6 +41,9 @@ class Post(models.Model):
     def get_readtime(self):
         result = readtime.of_html(self.content)
         return result.text
+    
+    def number_of_likes(self):
+        return self.likes.count()
 
 
 class Comment(models.Model):

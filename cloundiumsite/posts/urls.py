@@ -12,6 +12,7 @@ urlpatterns = [
     path('posts/new', views.PostCreateView.as_view(), name='post_create'),
     path('posts/<pk>/<slug>/', views.PostDetailView.as_view(), name='post_detail'),
     path('posts/<pk>/<slug>/edit', views.PostUpdateView.as_view(), name='post_update'),
+    path('post-like/',views.post_like_view, name='post_like'),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
