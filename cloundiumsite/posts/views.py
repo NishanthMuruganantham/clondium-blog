@@ -120,20 +120,22 @@ def load_more_comments(request):
     return JsonResponse({'data':t}
 )
 
-#* POST LIKE VIEW
+
+# #* POST LIKE VIEW    
 def post_like_view(request):
-    post_id = int(request.GET['postid'])
-    post_slug = request.GET['postslug']
-    post = get_object_or_404(Post,id=post_id)
-    print(request.user.id)
-    if post.likes.filter(id = request.user.id).exists():
-        print('exists')
-        post.likes.remove(request.user)
-        liked = False
-    else:
-        print('not exists')
-        post.likes.add(request.user)
-        liked = True
     
-    ctx={"likes_count":post.number_of_likes(),"liked":liked}
-    return HttpResponse(json.dumps(ctx), content_type='application/json')    
+    if request.POST.get('action') == 'post':
+        result = ''
+        id = int(request.POST.get('postid'))
+        post = get_object_or_404(Post,id=id)
+        liked = False
+        
+        if post.likes.filter(id = request.user.id).exists():
+            post.likes.remove(request.user)
+            result = post.number_of_likes()
+        else:
+            post.likes.add(request.user)
+            result = post.number_of_likes()
+            liked = True
+        
+        return JsonResponse({'result':result,'is_post_liked':liked})
