@@ -4,7 +4,9 @@ from django.views import generic
 from .models import Post
 from .forms import PostCreationForm, CommentForm
 from django.template.loader import render_to_string
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+
+import json
 
 def home(request):
     return render(request, 'posts/post_detail.html')
@@ -60,6 +62,7 @@ class PostDetailView(generic.DetailView):
         post_is_liked = False
         if blog_post.likes.filter(id = self.request.user.id).exists():
             post_is_liked = True
+        print(post_is_liked)
         context['total_post_likes'] = blog_post.number_of_likes()
         context['post_is_liked'] = post_is_liked
         
@@ -112,7 +115,7 @@ def load_more_comments(request):
     print(offset)
     limit=int(request.GET['limit'])
     data=post.comments.all().order_by('id')[offset:offset+limit]
-    print(data)
+    print(request.user.id)
     t=render_to_string('posts/sample2.html',{'data':data})
     return JsonResponse({'data':t}
 )
@@ -124,7 +127,13 @@ def post_like_view(request):
     post = get_object_or_404(Post,id=post_id)
     print(request.user.id)
     if post.likes.filter(id = request.user.id).exists():
+        print('exists')
         post.likes.remove(request.user)
+        liked = False
     else:
+        print('not exists')
         post.likes.add(request.user)
-    return redirect(reverse('posts:post_detail',kwargs={'pk':post_id,'slug':post_slug}))
+        liked = True
+    
+    ctx={"likes_count":post.number_of_likes(),"liked":liked}
+    return HttpResponse(json.dumps(ctx), content_type='application/json')    
