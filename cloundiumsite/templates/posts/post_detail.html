@@ -4,7 +4,7 @@
 {% block headcontent %}
     <link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/ir-black.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.6.0/dist/highlightjs-line-numbers.min.js"></script>
     <script>hljs.highlightAll();</script>
 {% endblock %}
@@ -53,7 +53,7 @@
                     }
 
                     .fa-thumbs-down {
-                        color: red;
+                        color: rgb(40, 110, 214);
                         cursor: pointer;
                     }
                     
@@ -161,7 +161,6 @@
             <div class="container mt-2 mb-5" id="CommentsSection">
                 <div class="d-flex justify-content-center row">
                     <div class="d-flex flex-column col-md-12 ">
-                        
                         <div class="coment-bottom bg-white p-2 px-4" id="filteredComments">
                             {% if post.comments.all %}
                                 {% for comment in post.comments.all|dictsort:"commented_at"|slice:"0:2" %}
@@ -172,17 +171,25 @@
                                         <div class="comment-text-sm"><span>{{comment.content|safe|linebreaksbr}}</span></div>
                                         <div class="reply-section">
                                             <div class="d-flex flex-row align-items-center voting-icons">
-                                                
-                                                <span>
-                                                    <i class="fa fa-37x fa-thumbs-up " aria-hidden="true" ></i>
+                                                <!-- COMMENT LIKES START -->
+                                                {% if user in comment.likes.all %}
+                                                    <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" class="comment_liked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
+                                                        <i class="fa fa-37x fa-thumbs-up " aria-hidden="true" ></i>
+                                                    </span>
+                                                {% else %}
+                                                    <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
+                                                        <i class="fa fa-37x fa-thumbs-o-up " aria-hidden="true" ></i>
+                                                    </span>
+                                                {% endif %}
+                                                <span class="ml-2" id="comment_like_count_for_{{comment.id}}">
+                                                    {{ comment.likes.count }}
+                                                </span>
+                                                <!-- COMMENT LIKES END -->
+
+                                                <span class="ml-4">
+                                                    <i class="fa fa-thumbs-down " aria-hidden="true" ></i>
                                                 </span>
 
-                                                15
-
-                                                <span class="ml-2">
-                                                    <i class="fa fa-37x fa-thumbs-o-down " aria-hidden="true" ></i>
-                                                </span>
-                                                
                                                 <span class="ml-2">15</span><span class="dot ml-2"></span>
                                                 <h6 class="ml-2 mt-1">Reply</h6>
                                             </div>
@@ -205,7 +212,7 @@
                                 </button>
                             </span>
                         {% endif %}
-                    </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -218,7 +225,7 @@
 </body>
 <!-- End Article -->
 
-
+<script type="text/javascript" src="{% static 'blog/mediumish/js/comment_like.js' %}"></script>
 <script type="text/javascript" src="{% static 'blog/mediumish/js/loadcomments.js' %}"></script>
 <script type="text/javascript" src="{% static 'blog/mediumish/js/postlike.js' %}"></script>
 {% endblock %}

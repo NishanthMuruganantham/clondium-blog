@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import generic
-from .models import Post
+from .models import Post, Comment
 from .forms import PostCreationForm, CommentForm
 from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponse
@@ -76,7 +76,7 @@ class PostDetailView(generic.DetailView):
         blog_post = self.get_object()
         form.instance.commenter = request.user
         form.instance.post = blog_post
-        print('wcwedfcame')
+        print('new comment added')
         form.save()
         return redirect(reverse('posts:post_detail',kwargs={'pk':blog_post.pk,'slug':blog_post.slug}))
 
@@ -116,7 +116,7 @@ def load_more_comments(request):
     limit=int(request.GET['limit'])
     data=post.comments.all().order_by('id')[offset:offset+limit]
     print(request.user.id)
-    t=render_to_string('posts/sample2.html',{'data':data})
+    t=render_to_string('posts/sample2.html',{'data':data,'user':request.user})
     return JsonResponse({'data':t}
 )
 
@@ -136,6 +136,26 @@ def post_like_view(request):
         else:
             post.likes.add(request.user)
             result = post.number_of_likes()
+            liked = True
+        
+        return JsonResponse({'result':result,'is_post_liked':liked})
+
+
+# #* COMMENT LIKE VIEW    
+def comment_like_view(request):
+    
+    if request.POST.get('action') == 'post':
+        result = ''
+        id = int(request.POST.get('commentid'))
+        comment = get_object_or_404(Comment,id=id)
+        liked = False
+        
+        if comment.likes.filter(id = request.user.id).exists():
+            comment.likes.remove(request.user)
+            result = comment.number_of_likes()
+        else:
+            comment.likes.add(request.user)
+            result = comment.number_of_likes()
             liked = True
         
         return JsonResponse({'result':result,'is_post_liked':liked})

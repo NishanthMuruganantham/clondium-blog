@@ -5,7 +5,19 @@
         </div>
         <div class="comment-text-sm"><span>{{comment.content|safe|linebreaksbr}}</span></div>
         <div class="reply-section">
-            <div class="d-flex flex-row align-items-center voting-icons"><a href="#"><img src="https://img.icons8.com/material-outlined/24/4a90e2/facebook-like--v1.png"/></a>15<i class="fa fa-sort-down fa-2x mb-3 hit-voting"></i><span class="ml-2">15</span><span class="dot ml-2"></span>
+            <div class="d-flex flex-row align-items-center voting-icons">
+                {% if user in comment.likes.all %}
+                    <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" class="comment_liked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
+                        <i class="fa fa-37x fa-thumbs-up " aria-hidden="true" ></i>
+                    </span>
+                {% else %}
+                    <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
+                        <i class="fa fa-37x fa-thumbs-o-up " aria-hidden="true" ></i>
+                    </span>
+                {% endif %}
+                <span class="ml-2" id="comment_like_count_for_{{comment.id}}">
+                    {{ comment.likes.count }}
+                </span>
                 <h6 class="ml-2 mt-1">Reply</h6>
             </div>
         </div>
