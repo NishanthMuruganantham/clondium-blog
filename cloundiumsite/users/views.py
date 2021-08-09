@@ -17,6 +17,7 @@ from django.contrib.auth.tokens import default_token_generator
 
 from .forms import LoginForm, SignupForm, ProfileEditForm
 from .tokens import account_activation_token
+from posts.models import Post
 
 
 User = get_user_model()
@@ -155,12 +156,6 @@ class ProfileEditView(generic.UpdateView):
     form_class = ProfileEditForm
     template_name = 'users/account_settings.html'
     success_url = reverse_lazy('users:account_settings')
-    
-    # def form_valid(self,form):
-    #     self.object = form.save(commit=False)
-    #     self.object.user = self.request.user
-    #     self.object.save()
-    #     return super().form_valid(form)
     
     def get_object(self):
         return self.request.user

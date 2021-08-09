@@ -200,3 +200,23 @@ def comment_dislike_view(request):
                 'is_comment_disliked':disliked,
             }
         )
+
+
+#* ADD FAVOURITE POST VIEW
+def add_to_favourites_post(request):
+    if request.POST.get('action') == 'post':
+        post_id = int(request.POST.get('post_id'))
+        post = get_object_or_404(Post,id=post_id)
+        favourite = False
+        
+        if post.user_favourite.filter(id = request.user.id).exists():
+            post.user_favourite.remove(request.user)
+        else:
+            post.user_favourite.add(request.user)
+            favourite = True
+        
+        return JsonResponse(
+            {
+                'is_favourite':favourite
+            }
+        )
