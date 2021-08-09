@@ -141,21 +141,62 @@ def post_like_view(request):
         return JsonResponse({'result':result,'is_post_liked':liked})
 
 
-# #* COMMENT LIKE VIEW    
+
+#* COMMENT LIKE VIEW    
 def comment_like_view(request):
     
     if request.POST.get('action') == 'post':
-        result = ''
         id = int(request.POST.get('commentid'))
-        comment = get_object_or_404(Comment,id=id)
+        comment = get_object_or_404(Comment,id = id)
         liked = False
+        disliked = False
         
         if comment.likes.filter(id = request.user.id).exists():
             comment.likes.remove(request.user)
-            result = comment.number_of_likes()
         else:
             comment.likes.add(request.user)
-            result = comment.number_of_likes()
             liked = True
+            if comment.dislikes.filter(id = request.user.id).exists():
+                comment.dislikes.remove(request.user)
         
-        return JsonResponse({'result':result,'is_post_liked':liked})
+        likes_count = comment.number_of_likes()
+        dislikes_count = comment.number_of_dislikes()
+        
+        return JsonResponse(
+            {
+                'likes_count':likes_count,
+                'dislikes_count':dislikes_count,
+                'is_comment_liked':liked,
+                'is_comment_disliked':disliked
+            }
+        )
+
+
+#* COMMENT DISLIKE VIEW    
+def comment_dislike_view(request):
+    
+    if request.POST.get('action') == 'post':
+        id = int(request.POST.get('commentid'))
+        comment = get_object_or_404(Comment,id=id)
+        liked = False
+        disliked = False
+        
+        if comment.dislikes.filter(id = request.user.id).exists():
+            comment.dislikes.remove(request.user)
+        else:
+            comment.dislikes.add(request.user)
+            disliked = True
+            if comment.likes.filter(id = request.user.id).exists():
+                comment.likes.remove(request.user)
+        
+        likes_count = comment.number_of_likes()
+        dislikes_count = comment.number_of_dislikes()
+        
+        return JsonResponse(
+            {
+                'likes_count':likes_count,
+                'dislikes_count':dislikes_count,
+                'is_comment_liked':liked,
+                'is_comment_disliked':disliked,
+            }
+        )

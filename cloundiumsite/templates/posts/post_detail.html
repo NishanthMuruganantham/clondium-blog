@@ -186,11 +186,20 @@
                                                 </span>
                                                 <!-- COMMENT LIKES END -->
 
-                                                <span class="ml-4">
-                                                    <i class="fa fa-thumbs-down " aria-hidden="true" ></i>
+                                                <!-- COMMENT DISLIKES START -->
+                                                {% if user in comment.dislikes.all %}
+                                                    <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2 comment_disliked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
+                                                        <i class="fa fa-37x fa-thumbs-down " aria-hidden="true" ></i>
+                                                    </span>
+                                                {% else %}
+                                                    <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
+                                                        <i class="fa fa-37x fa-thumbs-o-down " aria-hidden="true" ></i>
+                                                    </span>
+                                                {% endif %}
+                                                <span class="ml-2" id="comment_dislike_count_for_{{comment.id}}">
+                                                    {{ comment.dislikes.count }}
                                                 </span>
-
-                                                <span class="ml-2">15</span><span class="dot ml-2"></span>
+                                                <!-- COMMENT DISLIKES END -->
                                                 <h6 class="ml-2 mt-1">Reply</h6>
                                             </div>
                                         </div>

@@ -12,21 +12,42 @@ function comment_liked(e){
             action: 'post'
         },
         success: function (json) {
-            var _commentlikescount = json['result']
-            var is_post_liked = json['is_post_liked']
-            console.log(is_post_liked)
-            document.getElementById("comment_like_count_for_"+_commentid).innerHTML = _commentlikescount
+            
+            var _commentlikescount = json['likes_count']
+            var comment_dislikes_count = json['dislikes_count']
+            var is_comment_liked = json['is_comment_liked']
+            var is_comment_disliked = json['is_comment_disliked']
+            console.log(_commentlikescount,comment_dislikes_count,is_comment_liked,is_comment_disliked)
 
-            if(is_post_liked === false)
+            // * MODIFYING THE LIKES AND DISLIKES COUNT
+            document.getElementById("comment_like_count_for_"+_commentid).innerHTML = _commentlikescount
+            document.getElementById("comment_dislike_count_for_"+_commentid).innerHTML = comment_dislikes_count
+
+            // * MODIFYING THE LIKE BUTTON
+            if(is_comment_liked === false)
             {
-                $("#"+_id).html('<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>');
-                $("#"+_id).removeClass("comment_liked");
+                $("#"+_commentid+"_comment_like_button").html('<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>');
+                $("#"+_commentid+"_comment_like_button").removeClass("comment_liked");
                 console.log('unlike')
             }
             else
             {
-                $("#"+_id).html('<i class="fa fa-thumbs-up" aria-hidden="true"></i>');
-                $("#"+_id).addClass("comment_liked");
+                $("#"+_commentid+"_comment_like_button").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i>');
+                $("#"+_commentid+"_comment_like_button").addClass("comment_liked");
+                console.log('like')
+            }
+
+            // * MODIFYING THE DISLIKE BUTTON
+            if(is_comment_disliked === false)
+            {
+                $("#"+_commentid+"_comment_dislike_button").html('<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>');
+                $("#"+_commentid+"_comment_dislike_button").removeClass("comment_disliked");
+                console.log('unlike')
+            }
+            else
+            {
+                $("#"+_commentid+"_comment_dislike_button").html('<i class="fa fa-thumbs-down" aria-hidden="true"></i>');
+                $("#"+_commentid+"_comment_dislike_button").addClass("comment_disliked");
                 console.log('like')
             }
         },

@@ -6,6 +6,7 @@
         <div class="comment-text-sm"><span>{{comment.content|safe|linebreaksbr}}</span></div>
         <div class="reply-section">
             <div class="d-flex flex-row align-items-center voting-icons">
+                <!-- COMMENT LIKES START -->
                 {% if user in comment.likes.all %}
                     <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" class="comment_liked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
                         <i class="fa fa-37x fa-thumbs-up " aria-hidden="true" ></i>
@@ -18,6 +19,22 @@
                 <span class="ml-2" id="comment_like_count_for_{{comment.id}}">
                     {{ comment.likes.count }}
                 </span>
+                <!-- COMMENT LIKES END -->
+
+                <!-- COMMENT DISLIKES START -->
+                {% if user in comment.dislikes.all %}
+                    <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2 comment_disliked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
+                        <i class="fa fa-37x fa-thumbs-down " aria-hidden="true" ></i>
+                    </span>
+                {% else %}
+                    <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
+                        <i class="fa fa-37x fa-thumbs-o-down " aria-hidden="true" ></i>
+                    </span>
+                {% endif %}
+                <span class="ml-2" id="comment_dislike_count_for_{{comment.id}}">
+                    {{ comment.dislikes.count }}
+                </span>
+                <!-- COMMENT DISLIKES END -->
                 <h6 class="ml-2 mt-1">Reply</h6>
             </div>
         </div>
