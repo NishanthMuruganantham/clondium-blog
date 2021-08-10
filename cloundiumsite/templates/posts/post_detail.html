@@ -83,7 +83,12 @@
                         color: rgb(12, 179, 123);
                         cursor: pointer;
                     }
-                    
+                    hr{
+                        background-color: rgb(12, 179, 123);
+                    }
+                    hr:df{
+                        background-color: rgb(179, 12, 12);
+                    }
                 </style>
                 
 				<ul>
@@ -182,7 +187,99 @@
 					<li><a href="#">Personal Growth</a></li>
 				</ul>
 			</div>
+
             <hr>
+
+
+            <!-- TESTING STARTS -->
+            <div class="align-items-center justify-content-center mt-5" id="CommentsSection">
+                <div class="row justify-content-center mb-4">
+                    <div class="col" id="filteredComments">
+                        {% for comment in post.comments.all|dictsort:"commented_at"|slice:"0:2" %}
+                            <div class="comment d-flex mb-5 comment-box">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar avatar-sm rounded-circle">
+                                        <img class="avatar-img" src="{{comment.commenter.profile_picture.url}}" alt="commenter_profile_pic">
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-2 ms-sm-3">
+                                    <div class="comment-meta d-flex align-items-baseline">
+                                        <h6 class="ml-2 mt-2">{{comment.commenter.username}}</h6>
+                                    </div>
+                                    <span class="text-muted"><small>{{comment.commented_at|timesince}}</small></span>
+                                    <div class="comment-text py-3">
+                                        {{ comment.content|safe|linebreaksbr }}
+                                    </div>
+                                    <div class="d-flex flex-row align-items-center voting-icons mt-1">
+                                        <!-- COMMENT LIKES START -->
+                                        {% if user in comment.likes.all %}
+                                            <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" class="comment_liked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
+                                                <i class="fa fa-37x fa-thumbs-up " aria-hidden="true" ></i>
+                                            </span>
+                                        {% else %}
+                                            <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
+                                                <i class="fa fa-37x fa-thumbs-o-up " aria-hidden="true" ></i>
+                                            </span>
+                                        {% endif %}
+                                        <span class="ml-2" id="comment_like_count_for_{{comment.id}}">
+                                            {{ comment.likes.count }}
+                                        </span>
+                                        <!-- COMMENT LIKES END -->
+                                        <span class="dot ml-2"></span>
+                                        <!-- COMMENT DISLIKES START -->
+                                        {% if user in comment.dislikes.all %}
+                                            <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2 comment_disliked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
+                                                <i class="fa fa-37x fa-thumbs-down " aria-hidden="true" ></i>
+                                            </span>
+                                        {% else %}
+                                            <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
+                                                <i class="fa fa-37x fa-thumbs-o-down " aria-hidden="true" ></i>
+                                            </span>
+                                        {% endif %}
+                                        <span class="ml-2" id="comment_dislike_count_for_{{comment.id}}">
+                                            {{ comment.dislikes.count }}
+                                        </span>
+                                        <!-- COMMENT DISLIKES END -->
+                                        <span class="dot ml-2"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sep" style="width:60px"></div>
+                        {% endfor %}
+                    </div>
+                    <style>
+                        .custombtn {
+                            margin: .2em .1em; 
+                            font-family: "Open Sans", sans-serif;
+                            font-weight: 700;
+                            font-size: 1em;
+                            color:black;
+                            -webkit-font-smoothing: antialiased;
+                            -moz-osx-font-smoothing: grayscale;
+                            border: none;
+                            
+                            border-radius: 5px;
+                            padding: 0.65em 1.3em;
+                            
+                            background-color: #1df860}
+                        
+                        .custombtn-sm
+                        {
+                            font-size: .85em;
+                            padding: .5em 1em;
+                        }
+                    </style>
+                </div>
+                <button type="button" class="custombtn custombtn-primary custombtn-sm" id="loadMoreComments" data-total="{{post.comments.count}}" data-limit="2" data-blogpostid="{{post.pk}}">
+                    Load more comments
+                </button>
+            </div>
+            <!-- TESTING ENDS -->
+
+            <br>  
+
+
+
 			<!-- End Tags -->
             <!-- COMMENT FORM START -->
             <form action="" method="POST">
@@ -201,74 +298,125 @@
             <br>
             <hr>
             <br>
+            <style>
+                
+                  
+                  .avatar-img,
+                  .avatar-initials,
+                  .avatar-placeholder {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: inherit;
+                  }
+                  
+                  
+                  
+                  .avatar-initials {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -ms-flex-align: center;
+                    align-items: center;
+                    -ms-flex-pack: center;
+                    justify-content: center;
+                    color: #fff;
+                    line-height: 0;
+                    background-color: #a0aec0;
+                  }
+                  
+                  .avatar-placeholder {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background: #a0aec0
+                      url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='%23fff' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z'/%3e%3c/svg%3e")
+                      no-repeat center/1.75rem;
+                  }
+                  
+                  .avatar-indicator {
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                    width: 20%;
+                    height: 20%;
+                    display: block;
+                    background-color: #a0aec0;
+                    border-radius: 50%;
+                  }
+                  
+                  .avatar-group {
+                    display: -ms-inline-flexbox;
+                    display: inline-flex;
+                  }
+                  
+                  .avatar-group .avatar + .avatar {
+                    margin-left: -0.75rem;
+                  }
+                  
+                  .avatar-group .avatar:hover {
+                    z-index: 1;
+                  }
+                  
+                  .avatar-sm,
+                  .avatar-group-sm > .avatar {
+                    width: 2.125rem;
+                    height: 2.125rem;
+                    font-size: 1rem;
+                  }
+                  
+                  .avatar-sm .avatar-placeholder,
+                  .avatar-group-sm > .avatar .avatar-placeholder {
+                    background-size: 1.25rem;
+                  }
+                  
+                  .avatar-group-sm > .avatar + .avatar {
+                    margin-left: -0.53125rem;
+                  }
+                  
+                  .avatar-lg,
+                  .avatar-group-lg > .avatar {
+                    width: 4rem;
+                    height: 4rem;
+                    font-size: 1.5rem;
+                  }
+                  
+                  .avatar-lg .avatar-placeholder,
+                  .avatar-group-lg > .avatar .avatar-placeholder {
+                    background-size: 2.25rem;
+                  }
+                  
+                  .avatar-group-lg > .avatar + .avatar {
+                    margin-left: -1rem;
+                  }
+                  
+                  .avatar-light .avatar-indicator {
+                    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75);
+                  }
+                  
+                  .avatar-group-light > .avatar {
+                    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75);
+                  }
+                  
+                  .avatar-dark .avatar-indicator {
+                    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25);
+                  }
+                  
+                  .avatar-group-dark > .avatar {
+                    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25);
+                  }
+                  
+                  /* Font not working in <textarea> for this version of bs */
+                  
+                  textarea {
+                    font-family: inherit;
+                  }
+                  
+            </style>
+            
             <!-- BLOGPOST COMMENTS START-->
-            <div class="container mt-2 mb-5" id="CommentsSection">
-                <div class="d-flex justify-content-center row">
-                    <div class="d-flex flex-column col-md-12 ">
-                        <div class="coment-bottom bg-white p-2 px-4" id="filteredComments">
-                            {% if post.comments.all %}
-                                {% for comment in post.comments.all|dictsort:"commented_at"|slice:"0:2" %}
-                                    <div class="commented-section mt-2 comment-box">
-                                        <div class="d-flex flex-row align-items-center commented-user">
-                                            <h5 class="mr-2">{{comment.commenter.username}}</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">{{comment.commented_at|timesince}}</span>
-                                        </div>
-                                        <div class="comment-text-sm"><span>{{comment.content|safe|linebreaksbr}}</span></div>
-                                        <div class="reply-section">
-                                            <div class="d-flex flex-row align-items-center voting-icons">
-                                                <!-- COMMENT LIKES START -->
-                                                {% if user in comment.likes.all %}
-                                                    <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" class="comment_liked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
-                                                        <i class="fa fa-37x fa-thumbs-up " aria-hidden="true" ></i>
-                                                    </span>
-                                                {% else %}
-                                                    <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
-                                                        <i class="fa fa-37x fa-thumbs-o-up " aria-hidden="true" ></i>
-                                                    </span>
-                                                {% endif %}
-                                                <span class="ml-2" id="comment_like_count_for_{{comment.id}}">
-                                                    {{ comment.likes.count }}
-                                                </span>
-                                                <!-- COMMENT LIKES END -->
-
-                                                <!-- COMMENT DISLIKES START -->
-                                                {% if user in comment.dislikes.all %}
-                                                    <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2 comment_disliked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
-                                                        <i class="fa fa-37x fa-thumbs-down " aria-hidden="true" ></i>
-                                                    </span>
-                                                {% else %}
-                                                    <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
-                                                        <i class="fa fa-37x fa-thumbs-o-down " aria-hidden="true" ></i>
-                                                    </span>
-                                                {% endif %}
-                                                <span class="ml-2" id="comment_dislike_count_for_{{comment.id}}">
-                                                    {{ comment.dislikes.count }}
-                                                </span>
-                                                <!-- COMMENT DISLIKES END -->
-                                                <h6 class="ml-2 mt-1">Reply</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <br>
-                                {% endfor %}
-                            {% else %}
-                                <p>
-                                    No comments yet
-                                </p>
-                            {% endif %}
-                        </div>
-                        <div class="coment-bottom bg-white p-2 px-4">
-                        {% if post.comments.count %}
-                            <span>
-                                <button class="btn btn-info" id="loadMoreComments" data-total="{{post.comments.count}}" data-limit="2" data-blogpostid="{{post.pk}}">
-                                    Load more comments
-                                </button>
-                            </span>
-                        {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
             <!-- BLOGPOST COMMENTS END-->
 		</div>
 		<!-- End Post -->
