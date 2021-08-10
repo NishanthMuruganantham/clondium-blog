@@ -196,55 +196,83 @@
                 <div class="row justify-content-center mb-4">
                     <div class="col" id="filteredComments">
                         {% for comment in post.comments.all|dictsort:"commented_at"|slice:"0:2" %}
-                            <div class="comment d-flex mb-5 comment-box">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-sm rounded-circle">
-                                        <img class="avatar-img" src="{{comment.commenter.profile_picture.url}}" alt="commenter_profile_pic">
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-2 ms-sm-3">
-                                    <div class="comment-meta d-flex align-items-baseline">
-                                        <h6 class="ml-2 mt-2">{{comment.commenter.username}}</h6>
-                                    </div>
-                                    <span class="text-muted"><small>{{comment.commented_at|timesince}}</small></span>
-                                    <div class="comment-text py-3">
-                                        {{ comment.content|safe|linebreaksbr }}
-                                    </div>
-                                    <div class="d-flex flex-row align-items-center voting-icons mt-1">
-                                        <!-- COMMENT LIKES START -->
-                                        {% if user in comment.likes.all %}
-                                            <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" class="comment_liked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
-                                                <i class="fa fa-37x fa-thumbs-up " aria-hidden="true" ></i>
-                                            </span>
-                                        {% else %}
-                                            <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
-                                                <i class="fa fa-37x fa-thumbs-o-up " aria-hidden="true" ></i>
-                                            </span>
-                                        {% endif %}
-                                        <span class="ml-2" id="comment_like_count_for_{{comment.id}}">
-                                            {{ comment.likes.count }}
-                                        </span>
-                                        <!-- COMMENT LIKES END -->
-                                        <span class="dot ml-2"></span>
-                                        <!-- COMMENT DISLIKES START -->
-                                        {% if user in comment.dislikes.all %}
-                                            <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2 comment_disliked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
-                                                <i class="fa fa-37x fa-thumbs-down " aria-hidden="true" ></i>
-                                            </span>
-                                        {% else %}
-                                            <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
-                                                <i class="fa fa-37x fa-thumbs-o-down " aria-hidden="true" ></i>
-                                            </span>
-                                        {% endif %}
-                                        <span class="ml-2" id="comment_dislike_count_for_{{comment.id}}">
-                                            {{ comment.dislikes.count }}
-                                        </span>
-                                        <!-- COMMENT DISLIKES END -->
-                                        <span class="dot ml-2"></span>
-                                    </div>
+                        <div class="comment d-flex mb-5 comment-box">
+                            <div class="flex-shrink-0">
+                                <div class="avatar avatar-sm rounded-circle">
+                                    <img class="avatar-img" src="{{comment.commenter.profile_picture.url}}" alt="commenter_profile_pic">
                                 </div>
                             </div>
-                            <div class="sep" style="width:60px"></div>
+                            <div class="flex-grow-1 ms-2 ms-sm-3">
+                                <div class="comment-meta d-flex align-items-baseline">
+                                    <h6 class="ml-2 mt-2">{{comment.commenter.username}}</h6>
+                                </div>
+                                <span class="text-muted"><small>{{comment.commented_at|timesince}}</small></span>
+                                <div class="comment-text py-3">
+                                    {{ comment.content|safe|linebreaksbr }}
+                                </div>
+                                <div class="d-flex flex-row align-items-center voting-icons mt-1">
+                                    <!-- COMMENT LIKES START -->
+                                    {% if user in comment.likes.all %}
+                                        <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" class="comment_liked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
+                                            <i class="fa fa-37x fa-thumbs-up " aria-hidden="true" ></i>
+                                        </span>
+                                    {% else %}
+                                        <span id="{{comment.id}}_comment_like_button" onclick="comment_liked(this)" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_like' %}">
+                                            <i class="fa fa-37x fa-thumbs-o-up " aria-hidden="true" ></i>
+                                        </span>
+                                    {% endif %}
+                                    <span class="ml-2" id="comment_like_count_for_{{comment.id}}">
+                                        {{ comment.likes.count }}
+                                    </span>
+                                    <!-- COMMENT LIKES END -->
+                                    <span class="dot ml-2"></span>
+                                    <!-- COMMENT DISLIKES START -->
+                                    {% if user in comment.dislikes.all %}
+                                        <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2 comment_disliked" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
+                                            <i class="fa fa-37x fa-thumbs-down " aria-hidden="true" ></i>
+                                        </span>
+                                    {% else %}
+                                        <span id="{{comment.id}}_comment_dislike_button" onclick="comment_liked(this)" class="ml-2" data-commentid="{{comment.pk}}" data-commentlikeurl="{% url 'posts:comment_dislike' %}">
+                                            <i class="fa fa-37x fa-thumbs-o-down " aria-hidden="true" ></i>
+                                        </span>
+                                    {% endif %}
+                                    <span class="ml-2" id="comment_dislike_count_for_{{comment.id}}">
+                                        {{ comment.dislikes.count }}
+                                    </span>
+                                    <!-- COMMENT DISLIKES END -->
+                                    <span class="dot ml-2"></span>
+                                    <span class="ml-2">
+                                        <i class="fa fa-37x fa-mail-reply " aria-hidden="true" ></i>
+                                    </span>
+                                    <span class="ml-2">
+                                        Reply
+                                    </span>
+                                </div>
+                                {% if comment.replies.all %}
+                                    {% for reply in comment.replies.all %}
+                                        <div class="comment-replies bg-light p-3 mt-3 rounded">
+                                            <div class="reply d-flex mb-4 ml-4">
+                                                <div class="flex-shrink-0">
+                                                    <div class="avatar avatar-sm rounded-circle">
+                                                        <img class="avatar-img" src="{{reply.replier.profile_picture.url}}" alt="replier_profile_pic">
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 ms-sm-3">
+                                                    <div class="comment-meta d-flex align-items-baseline">
+                                                        <h6 class="ml-2 mt-2">{{reply.replier.username}}</h6>
+                                                    </div>
+                                                    <span class="text-muted"><small>{{reply.replied_at|timesince}}</small></span>
+                                                    <div class="comment-text py-3">
+                                                        {{ reply.content|safe|linebreaksbr }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="sep" style="width:60px"></div>
                         {% endfor %}
                     </div>
                     <style>

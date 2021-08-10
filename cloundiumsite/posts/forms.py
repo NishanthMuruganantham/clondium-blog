@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Comment
+from .models import Post, Comment, Reply
 
 
 class PostCreationForm(forms.ModelForm):
@@ -32,6 +32,16 @@ class PostCreationForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
+        fields = ('content',)
+        
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-input','rows': 6, 'cols':'100px'})
+        }
+
+
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = Reply
         fields = ('content',)
         
         widgets = {

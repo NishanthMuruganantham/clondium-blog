@@ -1,4 +1,5 @@
 {% for comment in data %}
+{% if comment.is_parent %}
 <div class="comment d-flex mb-5 comment-box">
     <div class="flex-shrink-0">
         <div class="avatar avatar-sm rounded-circle">
@@ -48,4 +49,6 @@
     </div>
 </div>
 <div class="sep" style="width:60px"></div>
+{% endif %}
+
 {% endfor %}

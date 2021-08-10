@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import generic
 from .models import Post, Comment
-from .forms import PostCreationForm, CommentForm
+from .forms import PostCreationForm, CommentForm, ReplyForm
 from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponse
+from django.views import View
 
 import json
 
@@ -220,3 +221,18 @@ def add_to_favourites_post(request):
                 'is_favourite':favourite
             }
         )
+
+
+class CommentReplyView(View):
+    def post(self, request, post_pk, comment_pk, *args, **kwargs):
+        blog_post = Post.objects.get(pk=post_pk)
+        parent_comment = Comment.objects.get(pk=comment_pk)
+        form = ReplyForm(request.POST)
+        
+        if form.is_valid():
+            new_reply = form.save(commit=False)
+            new_reply.replier = request.user
+            new_reply.comment = parent_comment
+            new_reply.save()
+        
+        return redirect(reverse('posts:post_detail',kwargs={'pk':blog_post.pk,'slug':blog_post.slug}))

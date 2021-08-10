@@ -63,3 +63,21 @@ class Comment(models.Model):
     
     def number_of_dislikes(self):
         return self.dislikes.count()
+
+
+class Reply(models.Model):
+    comment         = models.ForeignKey(Comment, on_delete=models.CASCADE,  related_name='replies')
+    replier         = models.ForeignKey(User, on_delete=models.CASCADE, related_name='replies')
+    content         = models.TextField()
+    replied_at      = models.DateTimeField(auto_now_add=True)
+    likes           = models.ManyToManyField(User, related_name='reply_likes', blank=True)
+    dislikes        = models.ManyToManyField(User, related_name='reply_dislikes', blank=True)
+    
+    def __str__(self):
+        return self.content
+    
+    def number_of_likes(self):
+        return self.likes.count()
+    
+    def number_of_dislikes(self):
+        return self.dislikes.count()
