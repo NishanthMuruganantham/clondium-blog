@@ -158,3 +158,24 @@ function save_post(e) {
         }
     });
 }
+
+
+function commentReplyToggle(parent_id)
+{
+    const row = document.getElementById(parent_id);
+    if (row.classList.contains('d-none'))
+    {
+        row.classList.remove('d-none');
+    }
+    else
+    {
+        row.classList.add('d-none');
+    }
+}
+
+function load_more_replies(params) {
+    var _currentComments=$(".comment-box").length;
+    var _limit=$(this).attr('data-limit');
+    var _total=$(this).attr('data-total');
+    var _blogpostid = $(this).attr('data-blogpostid');
+}

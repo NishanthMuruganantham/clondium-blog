@@ -44,53 +44,6 @@
 				</p>
 
                 <span id="like_count">{{post.likes.count}}</span>
-
-                <style>
-                    .fa-heart-o {
-                        color: red;
-                        cursor: pointer;
-                    }
-                    
-                    .fa-heart {
-                        color: red;
-                        cursor: pointer;
-                    }
-
-                    .fa-thumbs-down {
-                        color: rgb(40, 110, 214);
-                        cursor: pointer;
-                    }
-                    
-                    .fa-thumbs-up {
-                        color: rgb(40, 110, 214);
-                        cursor: pointer;
-                    }
-                    .fa-thumbs-o-down {
-                        color: rgb(40, 110, 214);
-                        cursor: pointer;
-                    }
-                    
-                    .fa-thumbs-o-up {
-                        color: rgb(40, 110, 214);
-                        cursor: pointer;
-                    }
-
-                    .fa-bookmark-o {
-                        color: rgb(12, 179, 123);
-                        cursor: pointer;
-                    }
-                    
-                    .fa-bookmark {
-                        color: rgb(12, 179, 123);
-                        cursor: pointer;
-                    }
-                    hr{
-                        background-color: rgb(12, 179, 123);
-                    }
-                    hr:df{
-                        background-color: rgb(179, 12, 12);
-                    }
-                </style>
                 
 				<ul>
                     <li>
@@ -242,16 +195,16 @@
                                     </span>
                                     <!-- COMMENT DISLIKES END -->
                                     <span class="dot ml-2"></span>
-                                    <span class="ml-2">
-                                        <i class="fa fa-37x fa-mail-reply " aria-hidden="true" ></i>
-                                    </span>
-                                    <span class="ml-2">
-                                        Reply
-                                    </span>
+                                    <div onclick="commentReplyToggle('comment_reply_for_{{comment.pk}}')">
+                                        <span class="ml-2" onclick="commentReplyToggle('comment_reply_for_{{comment.pk}}')">
+                                            <i class="fa fa-37x fa-mail-reply " aria-hidden="true" ></i>
+                                        </span>
+                                            Reply
+                                    </div>
                                 </div>
                                 {% if comment.replies.all %}
-                                    {% for reply in comment.replies.all %}
-                                        <div class="comment-replies bg-light p-3 mt-3 rounded">
+                                    <div class="comment-replies bg-light p-3 mt-3 rounded">
+                                        {% for reply in comment.replies.all %}
                                             <div class="reply d-flex mb-4 ml-4">
                                                 <div class="flex-shrink-0">
                                                     <div class="avatar avatar-sm rounded-circle">
@@ -296,46 +249,43 @@
                                                             {{ reply.dislikes.count }}
                                                         </span>
                                                         <!-- COMMENT DISLIKES END -->
-                                                        <span class="dot ml-2"></span>
-                                                        <span class="ml-2">
-                                                            <i class="fa fa-37x fa-mail-reply " aria-hidden="true" ></i>
-                                                        </span>
-                                                        <span class="ml-2">
-                                                            Reply
-                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="reply d-flex mb-4 ml-4">
+                                        <div class="flex-grow-1 ms-2 ms-sm-3">
+                                            <div class="comment-meta d-flex align-items-baseline">
+                                                <button type="button"  id="loadMoreReplies" data-total="{{comment.replies.count}}" data-limit="2" data-blogcommentid="{{comment.pk}}">
+                                                    Load More Replies
+                                                </button>
+                                            </div>
                                         </div>
-                                    {% endfor %}
+                                    </div>
                                 {% endif %}
+                                <div class="bg-light p-3 mt-0.5 rounded comment_section d-none" id="comment_reply_for_{{comment.pk}}">
+                                    <div class="reply d-flex mb-4 ml-4">
+                                        <div class="flex-grow-1 ms-2 ms-sm-3">
+                                            <form action="{% url 'posts:comment_reply' post_pk=post.pk comment_pk=comment.pk %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        {{comment_form.content}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="submit" value="Reply" class="btn btn-primary">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="sep" style="width:60px"></div>
                         {% endfor %}
                     </div>
-                    <style>
-                        .custombtn {
-                            margin: .2em .1em; 
-                            font-family: "Open Sans", sans-serif;
-                            font-weight: 700;
-                            font-size: 1em;
-                            color:black;
-                            -webkit-font-smoothing: antialiased;
-                            -moz-osx-font-smoothing: grayscale;
-                            border: none;
-                            
-                            border-radius: 5px;
-                            padding: 0.65em 1.3em;
-                            
-                            background-color: #1df860}
-                        
-                        .custombtn-sm
-                        {
-                            font-size: .85em;
-                            padding: .5em 1em;
-                        }
-                    </style>
                 </div>
                 <button type="button" class="custombtn custombtn-primary custombtn-sm" id="loadMoreComments" data-total="{{post.comments.count}}" data-limit="2" data-blogpostid="{{post.pk}}">
                     Load more comments

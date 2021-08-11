@@ -116,10 +116,7 @@ def load_more_comments(request):
     print(offset)
     limit=int(request.GET['limit'])
     data=post.comments.all().order_by('id')[offset:offset+limit]
-    print(request.user.id)
-    print(data)
     t=render_to_string('posts/sample2.html',{'data':data,'user':request.user})
-    print(t)
     return JsonResponse({'data':t}
 )
 

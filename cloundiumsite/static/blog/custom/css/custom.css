@@ -111,3 +111,68 @@ textarea {
     font-family: inherit;
 }
 
+.custombtn {
+    margin: .2em .1em; 
+    font-family: "Open Sans", sans-serif;
+    font-weight: 700;
+    font-size: 1em;
+    color:black;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    border: none;
+    
+    border-radius: 5px;
+    padding: 0.65em 1.3em;
+    
+    background-color: #1df860}
+
+.custombtn-sm
+{
+    font-size: .85em;
+    padding: .5em 1em;
+}
+
+.fa-heart-o {
+    color: red;
+    cursor: pointer;
+}
+
+.fa-heart {
+    color: red;
+    cursor: pointer;
+}
+
+.fa-thumbs-down {
+    color: rgb(40, 110, 214);
+    cursor: pointer;
+}
+
+.fa-thumbs-up {
+    color: rgb(40, 110, 214);
+    cursor: pointer;
+}
+.fa-thumbs-o-down {
+    color: rgb(40, 110, 214);
+    cursor: pointer;
+}
+
+.fa-thumbs-o-up {
+    color: rgb(40, 110, 214);
+    cursor: pointer;
+}
+
+.fa-bookmark-o {
+    color: rgb(12, 179, 123);
+    cursor: pointer;
+}
+
+.fa-bookmark {
+    color: rgb(12, 179, 123);
+    cursor: pointer;
+}
+hr{
+    background-color: rgb(12, 179, 123);
+}
+hr:df{
+    background-color: rgb(179, 12, 12);
+}
