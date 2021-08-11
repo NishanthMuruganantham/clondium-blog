@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import generic
-from .models import Post, Comment
+from .models import Post, Comment, Reply
 from .forms import PostCreationForm, CommentForm, ReplyForm
 from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponse
@@ -201,6 +201,70 @@ def comment_dislike_view(request):
                 'is_comment_disliked':disliked,
             }
         )
+
+
+
+#* REPLY LIKE VIEW    
+def reply_like_view(request):
+    
+    if request.POST.get('action') == 'post':
+        id = int(request.POST.get('replyid'))
+        reply = get_object_or_404(Reply,id = id)
+        liked = False
+        disliked = False
+        
+        if reply.likes.filter(id = request.user.id).exists():
+            reply.likes.remove(request.user)
+        else:
+            reply.likes.add(request.user)
+            liked = True
+            if reply.dislikes.filter(id = request.user.id).exists():
+                reply.dislikes.remove(request.user)
+        
+        likes_count = reply.number_of_likes()
+        dislikes_count = reply.number_of_dislikes()
+        
+        return JsonResponse(
+            {
+                'likes_count':likes_count,
+                'dislikes_count':dislikes_count,
+                'is_reply_liked':liked,
+                'is_reply_disliked':disliked
+            }
+        )
+
+
+
+#* REPLY DISLIKE VIEW    
+def reply_dislike_view(request):
+    
+    if request.POST.get('action') == 'post':
+        id = int(request.POST.get('replyid'))
+        reply = get_object_or_404(Reply,id=id)
+        liked = False
+        disliked = False
+        
+        if reply.dislikes.filter(id = request.user.id).exists():
+            reply.dislikes.remove(request.user)
+        else:
+            reply.dislikes.add(request.user)
+            disliked = True
+            if reply.likes.filter(id = request.user.id).exists():
+                reply.likes.remove(request.user)
+        
+        likes_count = reply.number_of_likes()
+        dislikes_count = reply.number_of_dislikes()
+        
+        return JsonResponse(
+            {
+                'likes_count':likes_count,
+                'dislikes_count':dislikes_count,
+                'is_reply_liked':liked,
+                'is_reply_disliked':disliked,
+            }
+        )
+
+
 
 
 #* ADD FAVOURITE POST VIEW

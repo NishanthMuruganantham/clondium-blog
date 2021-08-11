@@ -15,6 +15,8 @@ urlpatterns = [
     path('post-like/',views.post_like_view, name='post_like'),
     path('comment-like/',views.comment_like_view, name='comment_like'),
     path('comment-dislike/',views.comment_dislike_view, name='comment_dislike'),
+    path('reply-like/',views.reply_like_view, name='reply_like'),
+    path('reply-dislike/',views.reply_dislike_view, name='reply_dislike'),
     path('add-to-favourite_posts',views.add_to_favourites_post,name='add_to_favourite_posts'),
     path('posts/<int:post_pk>/comment/<int:comment_pk>/reply',views.CommentReplyView.as_view(),name='comment_reply'),
     

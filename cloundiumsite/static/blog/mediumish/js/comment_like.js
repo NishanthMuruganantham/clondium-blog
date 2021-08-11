@@ -1,9 +1,9 @@
-// * FUNCTION FOR POST LIKE AND DISLIKE
+// * FUNCTION FOR COMMENT LIKE AND DISLIKE
 function comment_liked(e){
     var _commentid = $(e).attr('data-commentid');
     var _commentlikeurl = $(e).attr('data-commentlikeurl');
     var _id = $(e).attr('id');
-    console.log(_commentid,_commentlikeurl,_id,_commentid+"_comment_like_count");
+    console.log(_commentid,_commentlikeurl,_id,_commentid+"_comment_like_count",'frfrfrf');
     $.ajax({
         type: 'POST',
         url: _commentlikeurl,
@@ -58,6 +58,64 @@ function comment_liked(e){
 }
 
 
+// * FUNCTION FOR REPLY LIKE AND DISLIKE
+function reply_liked(e){
+    var _replyid = $(e).attr('data-replyid');
+    var _replylikeurl = $(e).attr('data-replylikeurl');
+    var _id = $(e).attr('id');
+    console.log(_replyid,_replylikeurl,_id,_replyid+"_reply_like_count");
+    $.ajax({
+        type: 'POST',
+        url: _replylikeurl,
+        data:{
+            replyid:_replyid,
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            action: 'post'
+        },
+        success: function (json) {
+            
+            var _replylikescount = json['likes_count']
+            var reply_dislikes_count = json['dislikes_count']
+            var is_reply_liked = json['is_reply_liked']
+            var is_reply_disliked = json['is_reply_disliked']
+            console.log(_replylikescount,reply_dislikes_count,is_reply_liked,is_reply_disliked)
+
+            // * MODIFYING THE LIKES AND DISLIKES COUNT
+            document.getElementById("reply_like_count_for_"+_replyid).innerHTML = _replylikescount
+            document.getElementById("reply_dislike_count_for_"+_replyid).innerHTML = reply_dislikes_count
+
+            // * MODIFYING THE LIKE BUTTON
+            if(is_reply_liked === false)
+            {
+                $("#"+_replyid+"_reply_like_button").html('<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>');
+                $("#"+_replyid+"_reply_like_button").removeClass("reply_liked");
+                console.log('unlike')
+            }
+            else
+            {
+                $("#"+_replyid+"_reply_like_button").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i>');
+                $("#"+_replyid+"_reply_like_button").addClass("reply_liked");
+                console.log('like')
+            }
+
+            // * MODIFYING THE DISLIKE BUTTON
+            if(is_reply_disliked === false)
+            {
+                $("#"+_replyid+"_reply_dislike_button").html('<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>');
+                $("#"+_replyid+"_reply_dislike_button").removeClass("reply_disliked");
+                console.log('unlike')
+            }
+            else
+            {
+                $("#"+_replyid+"_reply_dislike_button").html('<i class="fa fa-thumbs-down" aria-hidden="true"></i>');
+                $("#"+_replyid+"_reply_dislike_button").addClass("reply_disliked");
+                console.log('like')
+            }
+        },
+        error: function (xhr, errmsg, err) {
+        }
+    });
+}
 
 // * FUNCTION TO SAVE THE POST
 function save_post(e) {
