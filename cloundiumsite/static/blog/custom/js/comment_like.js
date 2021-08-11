@@ -122,7 +122,7 @@ function save_post(e) {
     var tag_id = $(e).attr('id');
     var url_for_save_post = $(e).attr('data-url');
     var post_id = $(e).attr('data-postid');
-    console.log(tag_id,url_for_save_post,post_id);
+    console.log(tag_id,url_for_save_post,post_id,'new');
 
     $.ajax({
         type: 'POST',

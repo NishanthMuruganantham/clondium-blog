@@ -3,7 +3,7 @@ $(document).on('click','#like_button',function(e) {
     
     var _postid = $(this).attr('data-postid');
     var _likeurl = $(this).attr('data-likeurl');
-    console.log(_postid,_likeurl);
+    console.log(_postid,_likeurl,'new');
     $.ajax({
         type: 'POST',
         url: _likeurl,

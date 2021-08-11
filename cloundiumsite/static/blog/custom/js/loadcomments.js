@@ -4,7 +4,7 @@ $(document).ready(function(){
         var _limit=$(this).attr('data-limit');
         var _total=$(this).attr('data-total');
         var _blogpostid = $(this).attr('data-blogpostid');
-        console.log(_currentComments,_limit,_total,_blogpostid)
+        console.log(_currentComments,_limit,_total,_blogpostid,'fefef')
         //start AJAX
         $.ajax({
             url:'/load-more-comments',
@@ -24,6 +24,7 @@ $(document).ready(function(){
                 $(".load-more-icon").removeClass('fa-spin');
 
                 var _totalShowing=$(".comment-box").length;
+                console.log(res.data);
 				if(_totalShowing==_total){
 					$("#loadMoreComments").remove();
 				}
