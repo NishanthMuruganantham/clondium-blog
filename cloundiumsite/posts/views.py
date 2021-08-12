@@ -299,3 +299,17 @@ class CommentReplyView(View):
             new_reply.save()
         
         return redirect(reverse('posts:post_detail',kwargs={'pk':blog_post.pk,'slug':blog_post.slug}))
+
+
+#* LOAD MORE REPLIES
+def load_more_replies(request):
+    
+    comment_id = int(request.GET['post_comment_id'])
+    comment = get_object_or_404(Comment,pk=comment_id)
+    offset=int(request.GET['offset'])
+    limit=int(request.GET['limit'])
+
+    loaded_replies=comment.replies.all().order_by('id')[offset:offset+limit]
+
+    t = render_to_string('posts/load_replies.html',{'loaded_replies':loaded_replies,'user':request.user,'comment_id':comment_id})
+    return JsonResponse({'data':t})

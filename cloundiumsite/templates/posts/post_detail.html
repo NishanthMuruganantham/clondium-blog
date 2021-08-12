@@ -202,10 +202,11 @@
                                             Reply
                                     </div>
                                 </div>
+                                <!-- COMMENT REPLIES START -->
                                 {% if comment.replies.all %}
-                                    <div class="comment-replies bg-light p-3 mt-3 rounded">
-                                        {% for reply in comment.replies.all %}
-                                            <div class="reply d-flex mb-4 ml-4">
+                                    <div class="comment-replies bg-light p-3 mt-3 rounded" id="filteredReplies">
+                                        {% for reply in comment.replies.all|dictsort:"replied_at"|slice:"0:2" %}
+                                            <div class="reply d-flex mb-4 ml-4 reply-box-for-{{comment.id}}">
                                                 <div class="flex-shrink-0">
                                                     <div class="avatar avatar-sm rounded-circle">
                                                         <img class="avatar-img" src="{{reply.replier.profile_picture.url}}" alt="replier_profile_pic">
@@ -220,7 +221,7 @@
                                                         {{ reply.content|safe|linebreaksbr }}
                                                     </div>
                                                     <div class="d-flex flex-row align-items-center voting-icons mt-1">
-                                                        <!-- COMMENT LIKES START -->
+                                                        <!-- REPLY LIKES START -->
                                                         {% if user in reply.likes.all %}
                                                             <span id="{{reply.id}}_reply_like_button" onclick="reply_liked(this)" class="reply_liked" data-replyid="{{reply.pk}}" data-replylikeurl="{% url 'posts:reply_like' %}">
                                                                 <i class="fa fa-37x fa-thumbs-up " aria-hidden="true" ></i>
@@ -233,9 +234,9 @@
                                                         <span class="ml-2" id="reply_like_count_for_{{reply.id}}">
                                                             {{ reply.likes.count }}
                                                         </span>
-                                                        <!-- COMMENT LIKES END -->
+                                                        <!-- REPLY LIKES END -->
                                                         <span class="dot ml-2"></span>
-                                                        <!-- COMMENT DISLIKES START -->
+                                                        <!-- REPLY DISLIKES START -->
                                                         {% if user in reply.dislikes.all %}
                                                             <span id="{{reply.id}}_reply_dislike_button" onclick="reply_liked(this)" class="ml-2 reply_disliked" data-replyid="{{reply.pk}}" data-replylikeurl="{% url 'posts:reply_dislike' %}"">
                                                                 <i class="fa fa-37x fa-thumbs-down " aria-hidden="true" ></i>
@@ -248,22 +249,26 @@
                                                         <span class="ml-2" id="reply_dislike_count_for_{{reply.id}}">
                                                             {{ reply.dislikes.count }}
                                                         </span>
-                                                        <!-- COMMENT DISLIKES END -->
+                                                        <!-- REPLY DISLIKES END -->
                                                     </div>
                                                 </div>
                                             </div>
                                         {% endfor %}
                                     </div>
-                                    <div class="reply d-flex mb-4 ml-4">
-                                        <div class="flex-grow-1 ms-2 ms-sm-3">
-                                            <div class="comment-meta d-flex align-items-baseline">
-                                                <button type="button"  id="loadMoreReplies" data-total="{{comment.replies.count}}" data-limit="2" data-blogcommentid="{{comment.pk}}">
-                                                    Load More Replies
-                                                </button>
+                                    {% if comment.replies.count > 2 %}
+                                        <div class="reply d-flex mb-4 ml-4">
+                                            <div class="flex-grow-1 ms-2 ms-sm-3">
+                                                <div class="comment-meta d-flex align-items-baseline">
+                                                    <button type="button" id="loadMoreReplies" data-total="{{comment.replies.count}}" data-limit="2" data-blogcommentid="{{comment.pk}}">
+                                                        Load More Replies
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    {% endif %}
                                 {% endif %}
+                                <!-- COMMENT REPLIES END -->
+                                <!-- COMMENT REPLIES FORM START -->
                                 <div class="bg-light p-3 mt-0.5 rounded comment_section d-none" id="comment_reply_for_{{comment.pk}}">
                                     <div class="reply d-flex mb-4 ml-4">
                                         <div class="flex-grow-1 ms-2 ms-sm-3">
@@ -281,6 +286,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- COMMENT REPLIES FORM END -->
                             </div>
                         </div>
                         <div class="sep" style="width:60px"></div>
