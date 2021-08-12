@@ -4,16 +4,38 @@
 {% block headcontent %}
     <link href="{% static 'blog/custom/css/custom.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/ir-black.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.6.0/dist/highlightjs-line-numbers.min.js"></script>
-    <script>hljs.highlightAll();</script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.8.0/dist/highlightjs-line-numbers.min.js"></script>
+    <script>
+        hljs.highlightAll();
+        hljs.initHighlightingOnLoad();
+        hljs.initLineNumbersOnLoad();
+    </script>
+    
 {% endblock %}
 {% block content %}
 
 <!-- Begin Article
 ================================================== -->
 <body>
+    <style>
+    pre code.hljs {
+        max-height:600px;
+        font-size: 0.90em;
+    }
+   
+    .hljs-ln td{
+        padding-left: 20px;
+    }
+    .comment-box{
+        border: 1px solid black;
+        padding-left: 20px;
+        padding-top: 20px;
+    }
+    </style>
 <div class="container bg-color">
 	<div class="row">
 		<!-- Begin Fixed Left Share -->
@@ -147,6 +169,7 @@
 
             <!-- BLOGPOST COMMENTS START -->
             <div class="align-items-center justify-content-center mt-5" id="CommentsSection">
+                <h2 class="mb-5">oii</h2>
                 <div class="row justify-content-center mb-4">
                     <div class="col" id="filteredComments">
                         {% for comment in post.comments.all|dictsort:"commented_at"|slice:"0:2" %}
@@ -289,7 +312,7 @@
                                 <!-- COMMENT REPLIES FORM END -->
                             </div>
                         </div>
-                        <div class="sep" style="width:60px"></div>
+                        
                         {% endfor %}
                     </div>
                 </div>

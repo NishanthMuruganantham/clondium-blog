@@ -215,7 +215,7 @@ CKEDITOR_CONFIGS = {
             'autolink',
             'autoembed',
             'embedsemantic',
-            'autogrow',
+            #'autogrow',
             'codesnippet',
             #'prism',
             'widget',
@@ -229,7 +229,7 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'YourCustomToolbarConfig',
         'toolbarCanCollapse': True,
         'width' : 'auto',
-        'height' : '200px',
+        'height' : '230px',
     }
 }
 
