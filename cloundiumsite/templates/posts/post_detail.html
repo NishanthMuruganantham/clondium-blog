@@ -157,6 +157,9 @@
 			<!-- Begin Tags -->
 			<div class="after-post-tags">
 				<ul class="tags">
+                    {% for tags in post.tags.all %}
+                    <li><a href="{% url 'posts:tagged' slug=tags.slug %}">{{tags}}</a></li>
+                    {% endfor %}
 					<li><a href="#">Design</a></li>
 					<li><a href="#">Growth Mindset</a></li>
 					<li><a href="#">Productivity</a></li>
@@ -169,7 +172,7 @@
 
             <!-- BLOGPOST COMMENTS START -->
             <div class="align-items-center justify-content-center mt-5" id="CommentsSection">
-                <h2 class="mb-5">oii</h2>
+                <h2 class="mb-5" style="font:Lato, sans-serif">Comments:</h2>
                 <div class="row justify-content-center mb-4">
                     <div class="col" id="filteredComments">
                         {% for comment in post.comments.all|dictsort:"commented_at"|slice:"0:2" %}

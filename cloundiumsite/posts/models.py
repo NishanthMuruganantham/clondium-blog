@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.utils.text import slugify
 from ckeditor.fields import RichTextField
 import readtime
+from taggit.managers import TaggableManager
+
 
 User = get_user_model()
 
@@ -28,6 +30,7 @@ class Post(models.Model):
     category        = models.ForeignKey(Category, on_delete = models.CASCADE, default=1, related_name='posts')
     likes           = models.ManyToManyField(User,related_name='post')
     user_favourite  = models.ManyToManyField(User, related_name='favourite_posts', blank = True)
+    tags            = TaggableManager()
     
     def __str__(self):
         return f"{self.title} by {self.author}"

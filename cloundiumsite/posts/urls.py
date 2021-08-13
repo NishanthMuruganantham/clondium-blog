@@ -20,6 +20,7 @@ urlpatterns = [
     path('add-to-favourite_posts',views.add_to_favourites_post,name='add_to_favourite_posts'),
     path('posts/<int:post_pk>/comment/<int:comment_pk>/reply',views.CommentReplyView.as_view(),name='comment_reply'),
     path('load-more-replies/',views.load_more_replies,name='load_more_replies'),
+    path('tag/<slug:slug>/', views.tagged, name="tagged"),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

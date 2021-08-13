@@ -6,6 +6,8 @@ from .forms import PostCreationForm, CommentForm, ReplyForm
 from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponse
 from django.views import View
+from taggit.models import Tag
+from django.template.defaultfilters import slugify
 
 import json
 
@@ -39,6 +41,7 @@ def post_list(request):
 
 class PostCreateView(generic.CreateView):
     model = Post
+    common_tags = Post.tags.most_common()[:4]
     template_name = "posts/post_create.html"
     form_class = PostCreationForm
     
@@ -46,7 +49,12 @@ class PostCreateView(generic.CreateView):
         self.object = form.save(commit = False)
         self.object.author = self.request.user
         self.object.save()
+        form.save_m2m()
         return super().form_valid(form)
+    
+    # def get_context_data(self, **kwargs):       
+    #     context = super().get_context_data(**kwargs)
+    #     context['common_tags'] = self.common_tags
 
 
 
@@ -313,3 +321,16 @@ def load_more_replies(request):
 
     t = render_to_string('posts/load_replies.html',{'loaded_replies':loaded_replies,'user':request.user,'comment_id':comment_id})
     return JsonResponse({'data':t})
+
+
+
+def tagged(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    common_tags = Post.tags.most_common()[:4]
+    posts = Post.objects.filter(tags=tag)
+    context = {
+        'tag':tag,
+        'common_tags':common_tags,
+        'posts':posts,
+    }
+    return render(request, 'posts/post_list.html', context)

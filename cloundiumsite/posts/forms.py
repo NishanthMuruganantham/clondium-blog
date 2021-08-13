@@ -4,7 +4,7 @@ from .models import Post, Comment, Reply
 
 class PostCreationForm(forms.ModelForm):
     class Meta:
-        fields = ['title','content','header_image','category']
+        fields = ['title','content','header_image','category','tags']
         model = Post
         
         widgets = {
@@ -14,6 +14,8 @@ class PostCreationForm(forms.ModelForm):
                                             'class':'form-control'}),
             'category': forms.Select(attrs={'class': 'custom-select'}),
             # 'header_image': forms.ClearableFileInput(attrs={'class':'input-file'})
+            'tags': forms.TextInput(attrs={'placeholder':'your tags',
+                                                                'class':'input--style-6'}),
         }
         
         help_texts = {
