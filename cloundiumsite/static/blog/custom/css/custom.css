@@ -116,15 +116,15 @@ textarea {
     font-family: "Open Sans", sans-serif;
     font-weight: 700;
     font-size: 1em;
-    color:black;
+    color:white;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     border: none;
     
-    border-radius: 5px;
+    border-radius: 7px;
     padding: 0.65em 1.3em;
     
-    background-color: #1df860}
+    background-color: #00ab6b}
 
 .custombtn-sm
 {

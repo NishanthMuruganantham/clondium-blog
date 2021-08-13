@@ -31,9 +31,10 @@
         padding-left: 20px;
     }
     .comment-box{
-        border: 1px solid black;
-        padding-left: 20px;
-        padding-top: 20px;
+        border: 1px solid #c1c1c1;
+        padding-left:  1em;
+        padding-top:  1em;
+        padding-bottom: 1em;
     }
     </style>
 <div class="container bg-color">
@@ -134,11 +135,9 @@
 					</div>
 				</div>
 				<!-- End Top Menta -->
-                
-				<h1 class="posttitle">{{post.title}}</h1>
-                <span class="post-date">{{post.created_time}}</span><span class="dot"></span><span class="post-read">{{post.get_readtime}} read</span>
                 <br>
-
+				<h1 class="posttitle">{{post.title}}</h1>
+                <span class="post-date mb-4">{{post.created_time}}</span><span class="dot"></span><span class="post-read">{{post.get_readtime}} read</span>
 			</div>
             
             {% if post.header_image %}

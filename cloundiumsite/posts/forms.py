@@ -15,7 +15,8 @@ class PostCreationForm(forms.ModelForm):
             'category': forms.Select(attrs={'class': 'custom-select'}),
             # 'header_image': forms.ClearableFileInput(attrs={'class':'input-file'})
             'tags': forms.TextInput(attrs={'placeholder':'your tags',
-                                                                'class':'input--style-6'}),
+                                                                'class':'input--style-6',
+                                                                'data-role':'tagsinput'}),
         }
         
         help_texts = {
