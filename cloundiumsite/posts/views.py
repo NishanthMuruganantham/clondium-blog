@@ -12,7 +12,7 @@ from django.template.defaultfilters import slugify
 import json
 
 def home(request):
-    return render(request, 'posts/post_detail.html')
+    return render(request, 'home.html')
 
 
 
@@ -21,14 +21,14 @@ class PostListView(generic.ListView):
     context_object_name = "post_list"
     template_name = 'posts/post_list.html'
     
-    total_data = Post.objects.count()
-    data = Post.objects.all().order_by('-id')[:3]
+    # total_data = Post.objects.count()
+    # data = Post.objects.all().order_by('-id')[:3]
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['total_data'] = self.total_data
-        context['data'] = self.data
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['total_data'] = self.total_data
+    #     context['data'] = self.data
+    #     return context
         
 
 
