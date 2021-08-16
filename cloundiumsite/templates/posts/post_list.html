@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load static %}
 {% block content %}
 <style>
     img, svg {
@@ -12,58 +13,154 @@
         padding-left: 1em;
         padding-right: 1em;
     }
+    .fa-bookmark-o {
+        color: rgb(12, 179, 123);
+        cursor: pointer;
+    }
+    .fa-bookmark {
+        color: rgb(12, 179, 123);
+        cursor: pointer;
+    }
+    .fa-comment-o{
+        color: rgb(17, 174, 181);
+        cursor: pointer;
+    }
 </style>
-<div class="row mt-2">
+<div class="row">
     <div class="col-md-2">
         dwdw
     </div>
     <div class="col-md-7 col-md-offset-2 col-xs-12">
         {% for post in post_list %}
-        <div class="card">
-            <div class="card-block">
-                
-                <div class="mt-2">
-                    <div class="story-image wrapfooter">
-                        <a href="post.html">
-                            <img style="float:right;width: 16.5em;height:10em;" src="https://images.unsplash.com/photo-1620052583747-8f5e1e1f9799?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8aGQlMjBpbWFnZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="" >
-                        </a>
-                    </div>   
-                    <div class="ml-3 mr-1">
-                        <h2 class="card-title mb-3"><a href="post.html" class="story-title">{{post.title|truncatewords:15}}</a></h2>
-                        
-                        <span class="meta-footer-thumb">
-                            <a href="author.html"><img class="author-thumb" src="https://www.gravatar.com/avatar/e56154546cf4be74e393c62d1ae9f9d4?s=250&amp;d=mm&amp;r=x" alt="Sal"></a>
-                            </span>
-                            <span class="author-meta">
-                                <span class="post-name"><a href="author.html">Sal</a></span><br/>
-                                <span class="post-date">22 July 2017</span><span class="dot"></span><span class="post-read">6 min read</span>
-                                </span>
-                                <div class="after-post-tags mt-3">
-                                    <ul class="tags">
-                                        <li><a href="#">Productivity</a></li>
-                                        <li><a href="#">Personal Growth</a></li>
-                                    </ul>
-                                </div>
-                                
-                    </div>
+            <div class="card">
+                <div class="card-block">
                     <div class="mt-2">
-                        <span id="save_post_button"  class="post_saved" >
-                            <i class="fa fa-37x fa-bookmark " aria-hidden="true" ></i>
-                        </span>
-                        <span id="save_post_button"  class="post_saved ml-4" >
-                            <i class="fa fa-37x fa-heart " aria-hidden="true" ></i>
-                        </span>
+                        <div class="ml-3 mr-1">
+                            <h3 class="card-title mb-4"><a href="{% url 'posts:post_detail' pk=post.pk slug=post.slug %}" class="story-title">{{post.title|truncatewords:15}}</a></h3>
+                            <small>
+                                <span class="meta-footer-thumb">
+                                    <a href="author.html"><img class="author-thumb" style="width:36px;height: 36px;" src="{{post.author.profile_picture.url}}" alt="Sal"></a>
+                                </span>
+                                <span class="author-meta">
+                                    <span class="post-name"><a href="author.html">{{post.author.username}}</a></span><br/>
+                                    <span class="post-date text-muted">{{post.created_time}}</span><span class="dot"></span><span class="post-read">{{post.get_readtime}} read</span>
+                                </span>
+                                <span class="author-meta">
+                                    in Category
+                                </span>
+                            </small>
+                            <div class=" mt-3">
+                                <p>
+                                    {{post.short_description}}
+                                </p>
+                            </div>
+                            <style>
+                                ul.tags {
+                                    list-style:none;
+                                    padding-left:0;
+                                    margin:0 0 0 0;
+                                }
+                                ul.tags li {
+                                    display:inline-block;
+                                    font-size:0.9rem;
+                                }
+                                ul.tags li a {
+                                    background:rgba(0,0,0,.05);
+                                    color:rgba(0,0,0,.6);
+                                    border-radius:3px;
+                                    padding:5px 10px;
+                                }
+                                ul.tags li a:hover {
+                                    background:rgba(0,0,0,.07);
+                                    text-decoration:none;
+                                }
+                            </style>
+                            <div class="mt-2">
+                                {% if user in post.likes.all %}
+                                    <span id="like_post_button_{{post.pk}}" onclick="like_post(this)" class="post_liked" data-postid="{{post.pk}}" data-likeurl="{% url 'posts:post_like' %}">
+                                        <i class="fa fa-37x fa-heart " aria-hidden="true" ></i>
+                                    </span>
+                                {% else %}
+                                    <span id="like_post_button_{{post.pk}}" onclick="like_post(this)" data-postid="{{post.pk}}" data-likeurl="{% url 'posts:post_like' %}">
+                                        <i class="fa fa-37x fa-heart-o " aria-hidden="true" ></i>
+                                    </span>
+                                {% endif %}
+                                <span id="like_count_for_{{post.pk}}">{{post.likes.count}}</span>&nbsp;&nbsp;&nbsp;
+                                {% if user in post.user_favourite.all %}
+                                    {% csrf_token %}
+                                    <span id="save_post_button_{{post.pk}}" onclick="save_post(this)" class="post_saved" data-postid="{{post.pk}}" data-url="{% url 'posts:add_to_favourite_posts' %}">
+                                        <i class="fa fa-37x fa-bookmark " aria-hidden="true" ></i>
+                                    </span>
+                                {% else %}
+                                    <span id="save_post_button_{{post.pk}}" onclick="save_post(this)" class="" data-postid="{{post.pk}}" data-url="{% url 'posts:add_to_favourite_posts' %}">
+                                        <i class="fa fa-37x fa-bookmark-o " aria-hidden="true" ></i>
+                                    </span>
+                                {% endif %}
+                                <span id="save_count_for_{{post.pk}}">{{post.user_favourite.count}}</span>&nbsp;&nbsp;&nbsp;
+                                <span  class="post_saved" >
+                                    <i class="fa fa-37x fa-comment-o " aria-hidden="true"></i>
+                                </span>
+                                <span>{{post.comments.count}}</span>&nbsp;&nbsp;&nbsp;
+                                <span style="float:right;">
+                                    <ul class="tags">
+                                        <li><a href="#">Design</a></li>
+                                        <li><a href="#">Design</a></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-2 col-md-offset-2 col-xs-12">
+        <div class="share">
+            <div class="card mb-4 mainheading mr-5 ml-4">
+                <div class="card-header">Search</div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search">
+                        <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                    </div>
+                </div>
+            </div>
+            <div class="mainheading mr-5 ml-4 card mb-4">
+                <div class="card-header">Categories</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a href="#!">Web Design</a></li>
+                                <li><a href="#!">HTML</a></li>
+                                <li><a href="#!">Freebies</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a href="#!">JavaScript</a></li>
+                                <li><a href="#!">CSS</a></li>
+                                <li><a href="#!">Tutorials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4 mainheading mr-5 ml-4">
+                <div class="card-header">Side Widget</div>
+                <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+            </div>
+            <div class="mainheading mr-5 ml-4">
+                <div class="row post-top-meta">
+                    <p>
+                        efefhi wefuh wrfiuhw rfiuhwr fiuh wfijh we rihuv iurhgihuguhrigvhuerihuvgisrhuvishguhrughurghg
+                    </p>
                 </div>
             </div>
         </div>
-        {% endfor %}
-    </div>
-    <div class="col-md-2">
-wdwd
     </div>
 </div>
-
+<script type="text/javascript" src="{% static 'blog/custom/js/loadcomments.js' %}"></script>
+<script type="text/javascript" src="{% static 'blog/custom/js/comment_like.js' %}"></script>
 
 {% endblock %}

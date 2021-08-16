@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from ckeditor.fields import RichTextField
 import readtime
 from taggit.managers import TaggableManager
+from django.core.validators import MinLengthValidator
 
 
 User = get_user_model()
@@ -20,17 +21,19 @@ class Category(models.Model):
         return reverse('posts:home')
 
 
+
 class Post(models.Model):
-    author          = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'posts')
-    title           = models.CharField(max_length = 100)
-    content         = RichTextField(blank = True, null = True)
-    created_time    = models.DateTimeField(auto_now_add = True)
-    header_image    = models.ImageField(blank = True, null = True, upload_to='posts/images/')
-    slug            = models.SlugField(allow_unicode = True, unique = False)
-    category        = models.ForeignKey(Category, on_delete = models.CASCADE, default=1, related_name='posts')
-    likes           = models.ManyToManyField(User,related_name='post')
-    user_favourite  = models.ManyToManyField(User, related_name='favourite_posts', blank = True)
-    tags            = TaggableManager()
+    author              = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'posts')
+    title               = models.CharField(max_length = 100)
+    short_description   = models.TextField(max_length=300,validators=[MinLengthValidator(4)])
+    content             = RichTextField(blank = True, null = True)
+    created_time        = models.DateTimeField(auto_now_add = True)
+    header_image        = models.ImageField(blank = True, null = True, upload_to='posts/images/')
+    slug                = models.SlugField(allow_unicode = True, unique = False)
+    category            = models.ForeignKey(Category, on_delete = models.CASCADE, default=1, related_name='posts')
+    likes               = models.ManyToManyField(User,related_name='post')
+    user_favourite      = models.ManyToManyField(User, related_name='favourite_posts', blank = True)
+    tags                = TaggableManager()
     
     def __str__(self):
         return f"{self.title} by {self.author}"
@@ -48,6 +51,10 @@ class Post(models.Model):
     
     def number_of_likes(self):
         return self.likes.count()
+    
+    def number_of_saves(self):
+        return self.user_favourite.count()
+
 
 
 class Comment(models.Model):
@@ -66,6 +73,7 @@ class Comment(models.Model):
     
     def number_of_dislikes(self):
         return self.dislikes.count()
+
 
 
 class Reply(models.Model):

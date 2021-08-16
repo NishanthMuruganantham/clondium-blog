@@ -133,20 +133,19 @@ def load_more_comments(request):
 def post_like_view(request):
     
     if request.POST.get('action') == 'post':
-        result = ''
-        id = int(request.POST.get('postid'))
+        id = int(request.POST.get('post_id'))
         post = get_object_or_404(Post,id=id)
         liked = False
         
         if post.likes.filter(id = request.user.id).exists():
             post.likes.remove(request.user)
-            result = post.number_of_likes()
         else:
             post.likes.add(request.user)
-            result = post.number_of_likes()
             liked = True
         
-        return JsonResponse({'result':result,'is_post_liked':liked})
+        likes_count = post.number_of_likes()
+        
+        return JsonResponse({'likes_count':likes_count,'is_post_liked':liked})
 
 
 
@@ -287,9 +286,12 @@ def add_to_favourites_post(request):
             post.user_favourite.add(request.user)
             favourite = True
         
+        saves_count = post.number_of_saves()
+        
         return JsonResponse(
             {
-                'is_favourite':favourite
+                'is_favourite':favourite,
+                'saves_count':saves_count,
             }
         )
 

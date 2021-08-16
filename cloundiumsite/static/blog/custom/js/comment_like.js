@@ -1,3 +1,50 @@
+// * FUNCTION TO LIKE THE POST
+function like_post(e) {
+    var like_id = $(e).attr('id');
+    var url_for_like_post = $(e).attr('data-likeurl');
+    var post_id = $(e).attr('data-postid');
+    console.log(like_id,url_for_like_post,post_id,'new');
+
+    $.ajax({
+        type: 'POST',
+        url: url_for_like_post,
+        data:{
+            post_id:post_id,
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            action: 'post'
+        },
+        success: function (json) {
+            
+            var is_post_liked = json['is_post_liked']
+            var post_likes_count = json['likes_count']
+            console.log(is_post_liked)
+
+            // * MODIFYING THE LIKES COUNT
+            document.getElementById("like_count_for_"+post_id).innerHTML = post_likes_count
+
+            // * MODIFYING THE SAVE BUTTON
+            if(is_post_liked === false)
+            {
+                $("#like_post_button_"+post_id).html('<i class="fa fa-heart-o" aria-hidden="true"></i>');
+                $("#like_post_button_"+post_id).removeClass("post_liked");
+                // document.getElementById("post_save_message").innerHTML = "Save"
+                console.log('not liked')
+            }
+            else
+            {
+                $("#like_post_button_"+post_id).html('<i class="fa fa-heart" aria-hidden="true"></i>');
+                $("#like_post_button_"+post_id).addClass("post_liked");
+                // document.getElementById("post_save_message").innerHTML = "Saved"
+                console.log('liked')
+            }
+        },
+        error: function (xhr, errmsg, err) {
+        }
+    });
+}
+
+
+
 // * FUNCTION FOR COMMENT LIKE AND DISLIKE
 function comment_liked(e){
     var _commentid = $(e).attr('data-commentid');
@@ -135,21 +182,24 @@ function save_post(e) {
         success: function (json) {
             
             var is_post_favourite = json['is_favourite']
-
+            var saves_count = json['saves_count']
             console.log(is_post_favourite)
+
+            // * MODIFYING THE LIKES COUNT
+            document.getElementById("save_count_for_"+post_id).innerHTML = saves_count
 
             // * MODIFYING THE SAVE BUTTON
             if(is_post_favourite === false)
             {
-                $("#save_post_button").html('<i class="fa fa-bookmark-o" aria-hidden="true"></i>');
-                $("#save_post_button").removeClass("post_saved");
+                $("#save_post_button_"+post_id).html('<i class="fa fa-bookmark-o" aria-hidden="true"></i>');
+                $("#save_post_button_"+post_id).removeClass("post_saved");
                 // document.getElementById("post_save_message").innerHTML = "Save"
                 console.log('not saved')
             }
             else
             {
-                $("#save_post_button").html('<i class="fa fa-bookmark" aria-hidden="true"></i>');
-                $("#save_post_button").addClass("post_saved");
+                $("#save_post_button_"+post_id).html('<i class="fa fa-bookmark" aria-hidden="true"></i>');
+                $("#save_post_button_"+post_id).addClass("post_saved");
                 // document.getElementById("post_save_message").innerHTML = "Saved"
                 console.log('saved')
             }

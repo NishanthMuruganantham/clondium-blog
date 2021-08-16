@@ -4,12 +4,14 @@ from .models import Post, Comment, Reply
 
 class PostCreationForm(forms.ModelForm):
     class Meta:
-        fields = ['title','content','header_image','category','tags']
+        fields = ['title','short_description','content','header_image','category','tags']
         model = Post
         
         widgets = {
             'title': forms.TextInput(attrs={'placeholder':'your title',
                                                                 'class':'input--style-6'}),
+            'short_description': forms.Textarea(attrs={'placeholder':'Give a short description about your post in minimum of 250 characters and maximum of 300 characters',
+                                            'class':'form-control','minlength':50}),
             'content': forms.Textarea(attrs={'placeholder':'put your content here...',
                                             'class':'form-control'}),
             'category': forms.Select(attrs={'class': 'custom-select'}),

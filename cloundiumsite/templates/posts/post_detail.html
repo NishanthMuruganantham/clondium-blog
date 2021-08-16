@@ -65,15 +65,16 @@
                 <p id = "post_save_message">
                     Save Post
                 </p>
+                <span id="save_count_for_{{post.pk}}">{{post.user_favourite.count}}</span>
 				<ul>
                     <li>
                         <div style="font-size: 29px;">
                             {% if user in post.user_favourite.all %}
-                                <span id="save_post_button" onclick="save_post(this)" class="post_saved" data-postid="{{post.pk}}" data-url="{% url 'posts:add_to_favourite_posts' %}">
+                                <span id="save_post_button_{{post.pk}}" onclick="save_post(this)" class="post_saved" data-postid="{{post.pk}}" data-url="{% url 'posts:add_to_favourite_posts' %}">
                                     <i class="fa fa-37x fa-bookmark " aria-hidden="true" ></i>
                                 </span>
                             {% else %}
-                                <span id="save_post_button" onclick="save_post(this)" data-postid="{{post.pk}}" data-url="{% url 'posts:add_to_favourite_posts' %}">
+                                <span id="save_post_button_{{post.pk}}" onclick="save_post(this)" class="" data-postid="{{post.pk}}" data-url="{% url 'posts:add_to_favourite_posts' %}">
                                     <i class="fa fa-37x fa-bookmark-o " aria-hidden="true" ></i>
                                 </span>
                             {% endif %}
@@ -86,19 +87,19 @@
 					Talk
 				</p>
 
-                <span id="like_count">{{post.likes.count}}</span>
+                <span id="like_count_for_{{post.pk}}">{{post.likes.count}}</span>
                 
 				<ul>
                     <li>
                         <div style="font-size: 29px;">
-                            {% if post_is_liked %}
-                            <span id="like_button" class="posthearted" data-postid="{{post.pk}}" data-likeurl="{% url 'posts:post_like' %}">
-                                <i class="fa fa-37x fa-heart " aria-hidden="true" ></i>
-                            </span>
+                            {% if user in post.likes.all %}
+                                <span id="like_post_button_{{post.pk}}" onclick="like_post(this)" class="post_liked" data-postid="{{post.pk}}" data-likeurl="{% url 'posts:post_like' %}">
+                                    <i class="fa fa-37x fa-heart " aria-hidden="true" ></i>
+                                </span>
                             {% else %}
-                            <span id="like_button" data-postid="{{post.pk}}" data-likeurl="{% url 'posts:post_like' %}">
-                                <i class="fa fa-37x fa-heart-o " aria-hidden="true" ></i>
-                            </span>
+                                <span id="like_post_button_{{post.pk}}" onclick="like_post(this)" data-postid="{{post.pk}}" data-likeurl="{% url 'posts:post_like' %}">
+                                    <i class="fa fa-37x fa-heart-o " aria-hidden="true" ></i>
+                                </span>
                             {% endif %}
                         </div>
                     </li>
