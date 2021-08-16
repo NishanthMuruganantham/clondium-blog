@@ -21,6 +21,7 @@ urlpatterns = [
     path('posts/<int:post_pk>/comment/<int:comment_pk>/reply',views.CommentReplyView.as_view(),name='comment_reply'),
     path('load-more-replies/',views.load_more_replies,name='load_more_replies'),
     path('tag/<slug:slug>/', views.tagged, name="tagged"),
+    path('postss/category/<category_name>/',views.CategoryPostListView.as_view(),name="category_post_list"),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

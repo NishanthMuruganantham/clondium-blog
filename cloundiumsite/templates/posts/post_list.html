@@ -46,7 +46,7 @@
                                     <span class="post-date text-muted">{{post.created_time}}</span><span class="dot"></span><span class="post-read">{{post.get_readtime}} read</span>
                                 </span>
                                 <span class="author-meta">
-                                    in Category
+                                    in <a href="{% url 'posts:category_post_list' category_name=post.category%}">{{post.category}}</a>
                                 </span>
                             </small>
                             <div class=" mt-3">

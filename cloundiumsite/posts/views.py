@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import generic
-from .models import Post, Comment, Reply
+from .models import Post, Comment, Reply, Category
 from .forms import PostCreationForm, CommentForm, ReplyForm
 from django.template.loader import render_to_string
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.views import View
 from taggit.models import Tag
 from django.template.defaultfilters import slugify
@@ -336,3 +336,23 @@ def tagged(request, slug):
         'posts':posts,
     }
     return render(request, 'posts/post_list.html', context)
+
+
+class CategoryPostListView(generic.ListView):
+    model = Post
+    context_object_name = "post_list"
+    template_name = "post_list.html"
+    ordering = ["-created_time"]
+    
+    def get_queryset(self):
+        try:
+            self.category = Category.objects.prefetch_related('posts').get(name__iexact=self.kwargs.get('category_name'))
+        except Category.DoesNotExist:
+            raise Http404
+        else:
+            return self.category.posts.all().order_by("-created_time")
+    
+    def get_context_data(self,**kwargs):
+        context = super(CategoryPostListView, self).get_context_data(**kwargs)
+        context['requested_category'] = self.kwargs.get('category_name')
+        return context
