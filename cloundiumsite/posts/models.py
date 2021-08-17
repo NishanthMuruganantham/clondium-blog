@@ -13,13 +13,17 @@ User = get_user_model()
 
 class Category(models.Model):
     name = models.CharField(max_length = 40)
+    slug = models.SlugField(allow_unicode = True, unique = True, blank = True, null = True)
     
     def __str__(self):
         return self.name
     
     def get_absolute_url(self):
         return reverse('posts:home')
-
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Post(models.Model):

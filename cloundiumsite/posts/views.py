@@ -8,6 +8,7 @@ from django.http import JsonResponse, HttpResponse, Http404
 from django.views import View
 from taggit.models import Tag
 from django.template.defaultfilters import slugify
+from django.db.models import Q
 
 import json
 
@@ -20,6 +21,15 @@ class PostListView(generic.ListView):
     model = Post
     context_object_name = "post_list"
     template_name = 'posts/post_list.html'
+    ordering = ["-created_time"]
+    
+    def get_queryset(self):
+        searched_item = self.request.GET.get('q')
+        if searched_item:
+            return Post.objects.filter(
+                Q(title__icontains=searched_item) | Q(content__icontains=searched_item)
+            )
+        return Post.objects.all().order_by("-created_time")
     
     # total_data = Post.objects.count()
     # data = Post.objects.all().order_by('-id')[:3]
@@ -346,7 +356,7 @@ class CategoryPostListView(generic.ListView):
     
     def get_queryset(self):
         try:
-            self.category = Category.objects.prefetch_related('posts').get(name__iexact=self.kwargs.get('category_name'))
+            self.category = Category.objects.prefetch_related('posts').get(slug__iexact=self.kwargs.get('category_slug'))
         except Category.DoesNotExist:
             raise Http404
         else:
@@ -354,5 +364,5 @@ class CategoryPostListView(generic.ListView):
     
     def get_context_data(self,**kwargs):
         context = super(CategoryPostListView, self).get_context_data(**kwargs)
-        context['requested_category'] = self.kwargs.get('category_name')
+        context['requested_category'] = self.kwargs.get('category_slug')
         return context
