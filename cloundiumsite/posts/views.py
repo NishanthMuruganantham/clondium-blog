@@ -13,7 +13,7 @@ from django.db.models import Q
 import json
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'users/user_about.html')
 
 
 
