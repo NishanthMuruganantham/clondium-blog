@@ -40,4 +40,5 @@ urlpatterns = [
     ),
     
     path('account-settings/',views.ProfileEditView.as_view(), name = 'account_settings'),
+    path('<username>/info/', views.UserPostListView.as_view(), name = 'about_user'),
 ]

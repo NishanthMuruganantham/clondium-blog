@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
 from django.views import View, generic
 from django.contrib.auth import views as auth_views
@@ -159,3 +159,24 @@ class ProfileEditView(generic.UpdateView):
     
     def get_object(self):
         return self.request.user
+
+
+
+class UserPostListView(generic.ListView):
+    model = Post
+    context_object_name = "post_list"
+    template_name = "users/user_about.html"
+    ordering = ["-created_time"]
+    
+    def get_queryset(self):
+        try:
+            self.user = User.objects.get(username__exact = self.kwargs.get('username'))
+        except User.DoesNotExist:
+            raise Http404
+        else:
+            return self.user.posts.all().order_by("-created_time")
+    
+    def get_context_data(self, **kwargs):
+        context = super(UserPostListView, self).get_context_data(**kwargs)
+        context['detailed_user'] = self.user
+        return context

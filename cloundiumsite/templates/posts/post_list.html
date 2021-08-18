@@ -2,6 +2,10 @@
 {% load static %}
 {% block content %}
 <style>
+    body{
+        background:#dcdcdc;
+        margin-top:20px;
+       }
     img, svg {
         vertical-align: middle;
     }
@@ -39,10 +43,10 @@
                             <h3 class="card-title mb-4"><a href="{% url 'posts:post_detail' pk=post.pk slug=post.slug %}" class="story-title">{{post.title|truncatewords:15}}</a></h3>
                             <small>
                                 <span class="meta-footer-thumb">
-                                    <a href="author.html"><img class="author-thumb" style="width:36px;height: 36px;" src="{{post.author.profile_picture.url}}" alt="Sal"></a>
+                                    <a href="{% url 'users:about_user' username=post.author.username %}"><img class="author-thumb" style="width:36px;height: 36px;" src="{{post.author.profile_picture.url}}" alt="Sal"></a>
                                 </span>
                                 <span class="author-meta">
-                                    <span class="post-name"><a href="author.html">{{post.author.username}}</a></span><br/>
+                                    <span class="post-name"><a href="{% url 'users:about_user' username=post.author.username %}">{{post.author.username}}</a></span><br/>
                                     <span class="post-date text-muted">{{post.created_time}}</span><span class="dot"></span><span class="post-read">{{post.get_readtime}} read</span>
                                 </span>
                                 <span class="author-meta">
