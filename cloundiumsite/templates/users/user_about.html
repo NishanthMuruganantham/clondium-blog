@@ -2,6 +2,17 @@
 {% load static %}
 
 {% block content %}
+<style>
+    body{
+        background:#dcdcdc;
+        margin-top:20px;
+       }
+       .profile-cover {
+           position: relative;
+           z-index: 0;
+       }
+       
+</style>
 <link href="{% static 'blog/custom/css/custom.css' %}" rel="stylesheet">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container">
@@ -12,20 +23,33 @@
                 <h3 class="h3">{{detailed_user.first_name}} {{detailed_user.last_name}}</h3>
             </div>
             <div class="profile-cover__action bg--img" data-overlay="0.3">
-                <button class="btn btn-rounded btn-info">
-                    <i class="fa fa-plus"></i>
-                    <span>Follow</span>
+                {% if user.pk != detailed_user.pk %}
+                    {% if user in detailed_user.followers.all %}
+                        <button class="btn btn-rounded btn-info" style="background-color:#3bc067;">
+                            <span id="follow_button_for_{{detailed_user.pk}}" onclick="follow_user(this)" data-followurl="{% url 'users:follow_user' %}" data-followed_user_id="{{detailed_user.pk}}">
+                                <span id="is_{{detailed_user.pk}}_followed">Following</span>
+                            </span>
+                        </button>
+                    {% else %}
+                        <button class="btn btn-rounded btn-info">
+                            <span id="follow_button_for_{{detailed_user.pk}}" onclick="follow_user(this)" data-followurl="{% url 'users:follow_user' %}" data-followed_user_id="{{detailed_user.pk}}">
+                                <span id="is_{{detailed_user.pk}}_followed">Follow</span>
+                            </span>
+                        </button>
+                    {% endif %}
+                {% else %}
+                <button class="btn btn-rounded btn-info" style="background-color:#3bc067;opacity:0">
+                    <span>
+                        <span></span>
+                    </span>
                 </button>
-                <button class="btn btn-rounded btn-info">
-                    <i class="fa fa-comment"></i>
-                    <span>Message</span>
-                </button>
+                {% endif %}
             </div>
             <div class="profile-cover__info">
                 <ul class="nav">
                     <li><strong>{{detailed_user.posts.count}}</strong>Posts</li>
-                    <li><strong>33</strong>Followers</li>
-                    <li><strong>136</strong>Following</li>
+                    <li><strong id="follower_count_for_{{detailed_user.pk}}">{{detailed_user.followers.count}}</strong>Followers</li>
+                    <li><strong id="following_count_for_{{detailed_user.pk}}">{{detailed_user.following.count}}</strong>Following</li>
                 </ul>
             </div>
         </div>

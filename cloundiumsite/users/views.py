@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.contrib.auth import get_user_model
 from django.views import View, generic
 from django.contrib.auth import views as auth_views
@@ -89,13 +89,13 @@ def user_login(request):
             if user:
                 if user.is_active:
                     login(request,user)
-                    return redirect(reverse('home')) 
+                    return redirect(reverse('posts:home')) 
                 else:
                     messages.error(request,'Please click the link in the activation mail sent to your registered mail id to activate your account')
-                    return redirect(reverse('home'))
+                    return redirect(reverse('posts:home'))
             else:
                 messages.error(request,'username or password not correct')
-                return redirect(reverse('home'))
+                return redirect(reverse('posts:home'))
         else:
             return HttpResponse('login failed')
     else:
@@ -180,3 +180,33 @@ class UserPostListView(generic.ListView):
         context = super(UserPostListView, self).get_context_data(**kwargs)
         context['detailed_user'] = self.user
         return context
+
+
+
+#* FOLLOW USER VIEW    
+def follow_user(request):
+    
+    if request.POST.get('action') == 'post':
+        followed_user_id = int(request.POST.get('followed_user_id'))
+        #current_user_id     = int(request.POST.get('current_user_id'))
+        print(followed_user_id)
+        followed_user = get_object_or_404(User,id=followed_user_id)
+        #current_user = get_object_or_404(User,current_user_id)
+        print(followed_user)
+        followed = False
+        if followed_user_id != request.user.id:
+            if followed_user.followers.filter(id = request.user.id):
+                followed_user.followers.remove(request.user)
+            else:
+                followed_user.followers.add(request.user)
+                followed = True
+        
+        followers_count = followed_user.followers.count()
+        
+        
+        return JsonResponse(
+            {
+                'followers_count':followers_count,
+                'followed':followed,
+            }
+        )

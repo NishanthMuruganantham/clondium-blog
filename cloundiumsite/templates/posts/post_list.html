@@ -2,10 +2,6 @@
 {% load static %}
 {% block content %}
 <style>
-    body{
-        background:#dcdcdc;
-        margin-top:20px;
-       }
     img, svg {
         vertical-align: middle;
     }
@@ -80,8 +76,8 @@
                                 }
                             </style>
                             <div class="mt-2">
-                                {% if user in post.likes.all %}
                                 {% csrf_token %}
+                                {% if user in post.likes.all %}
                                     <span id="like_post_button_{{post.pk}}" onclick="like_post(this)" class="post_liked" data-postid="{{post.pk}}" data-likeurl="{% url 'posts:post_like' %}">
                                         <i class="fa fa-37x fa-heart " aria-hidden="true" ></i>
                                     </span>
@@ -92,7 +88,6 @@
                                 {% endif %}
                                 <span id="like_count_for_{{post.pk}}">{{post.likes.count}}</span>&nbsp;&nbsp;&nbsp;
                                 {% if user in post.user_favourite.all %}
-                                    {% csrf_token %}
                                     <span id="save_post_button_{{post.pk}}" onclick="save_post(this)" class="post_saved" data-postid="{{post.pk}}" data-url="{% url 'posts:add_to_favourite_posts' %}">
                                         <i class="fa fa-37x fa-bookmark " aria-hidden="true" ></i>
                                     </span>

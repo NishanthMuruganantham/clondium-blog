@@ -7,8 +7,9 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponse, Http404
 from django.views import View
 from taggit.models import Tag
-from django.template.defaultfilters import slugify
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 import json
 
@@ -49,7 +50,9 @@ def post_list(request):
 
 
 
-class PostCreateView(generic.CreateView):
+class PostCreateView(LoginRequiredMixin,generic.CreateView):
+    login_url = '/users/login/'
+    redirect_field_name = "users:user_login"
     model = Post
     common_tags = Post.tags.most_common()[:4]
     template_name = "posts/post_create.html"
@@ -101,7 +104,9 @@ class PostDetailView(generic.DetailView):
 
 
 
-class PostUpdateView(generic.UpdateView):
+class PostUpdateView(LoginRequiredMixin,generic.UpdateView):
+    login_url = '/users/login/'
+    redirect_field_name = "users:user_login"
     model = Post
     template_name = "posts/post_update.html"
     form_class = PostCreationForm

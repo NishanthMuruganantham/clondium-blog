@@ -45,6 +45,54 @@ function like_post(e) {
 
 
 
+// * FUNCTION TO FOLLOW A USER
+function follow_user(e) {
+    var followed_user_id = $(e).attr('data-followed_user_id');
+    var followurl = $(e).attr('data-followurl');
+    console.log(followed_user_id,followurl);
+
+    $.ajax({
+        type: 'POST',
+        url: followurl,
+        data:{
+            followed_user_id:followed_user_id,
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            action: 'post'
+        },
+        success: function (json) {
+            
+            var is_followed= json['followed']
+            var followers_count = json['followers_count']
+            console.log(is_followed,followers_count)
+
+            // * MODIFYING THE LIKES COUNT
+            document.getElementById("follower_count_for_"+followed_user_id).innerHTML = followers_count
+            
+
+            // * MODIFYING THE SAVE BUTTON
+            if(is_followed === false)
+            {   
+                $("#follow_button_for_"+followed_user_id).parent().css( "background-color", "#2bb3c0" )
+                $("#follow_button_for_"+followed_user_id).html('<span id="is_'+followed_user_id+'_followed">Follow</span>');
+                $("#follow_button_for_"+followed_user_id).removeClass("post_liked");
+                // document.getElementById("post_save_message").innerHTML = "Save"
+                console.log('not liked')
+            }
+            else
+            {
+                $("#follow_button_for_"+followed_user_id).parent().css( "background-color", "#3bc067" )
+                $("#follow_button_for_"+followed_user_id).html('<span id="is_'+followed_user_id+'_followed">Following</span>');
+                $("#follow_button_for_"+followed_user_id).addClass("post_liked");
+                // document.getElementById("post_save_message").innerHTML = "Saved"
+                console.log('liked')
+            }
+        },
+        error: function (xhr, errmsg, err) {
+        }
+    });
+}
+
+
 // * FUNCTION FOR COMMENT LIKE AND DISLIKE
 function comment_liked(e){
     var _commentid = $(e).attr('data-commentid');

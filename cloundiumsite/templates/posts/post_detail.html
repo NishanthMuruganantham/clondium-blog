@@ -349,6 +349,7 @@
 
 
 			<!-- End Tags -->
+            {% if user.is_authenticated %}
             <!-- COMMENT FORM START -->
             <form action="" method="POST">
                 {% csrf_token %}
@@ -363,6 +364,8 @@
                 </div>
             </form>
             <!-- COMMENT FORM END -->
+            {% endif %}
+            
             <br>
             <hr>
             <br>

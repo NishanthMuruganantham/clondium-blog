@@ -177,15 +177,7 @@ hr:df{
     background-color: rgb(179, 12, 12);
 }
 
-body{
-    background:#dcdcdc;
-    margin-top:20px;
-   }
-   .profile-cover {
-       position: relative;
-       z-index: 0;
-   }
-   
+
    .panel {
        margin-bottom: 30px;
        color: #696969;

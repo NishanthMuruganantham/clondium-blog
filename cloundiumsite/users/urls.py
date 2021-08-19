@@ -41,4 +41,5 @@ urlpatterns = [
     
     path('account-settings/',views.ProfileEditView.as_view(), name = 'account_settings'),
     path('<username>/info/', views.UserPostListView.as_view(), name = 'about_user'),
+    path('follow-user/', views.follow_user, name = "follow_user"),
 ]
