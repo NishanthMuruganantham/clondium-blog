@@ -28,7 +28,7 @@
     <link href="{% static 'blog/mediumish/css/mediumish.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merienda+One">
-
+    <link href="{% static 'blog/custom/css/custom.css' %}" rel="stylesheet">
     {% block headcontent %}
     
     {% endblock %}
@@ -42,6 +42,9 @@
 <style>
     .mediumnavigation {
         background:rgba(137, 255, 146, 0.97);
+    }
+    .avatar-sm{
+        border-radius:20px;
     }
 </style>
 <nav class="navbar navbar-toggleable-md navbar-light bg-white fixed-top mediumnavigation">
@@ -64,13 +67,23 @@
                     <a class="nav-link" href="{% url 'posts:post_create'%} ">New Post</a>
                 </li>
                 {% endif %}
-                <li class="nav-item">
-                <a class="nav-link" href="author.html">Categories</a>
+                <li  class="nav-item dropdown ml-auto">
+                    <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action">Categories<b class="caret"></b></a>
+                    <div class="dropdown-menu"> 
+                        <a href="{% url 'posts:category_post_list' category_slug='coding' %}" class="dropdown-item">Coding</a>
+                        <a href="{% url 'posts:category_post_list' category_slug='entertainment' %}" class="dropdown-item">Entertainment</a>
+                        <a href="{% url 'posts:category_post_list' category_slug='machine-learning' %}" class="dropdown-item">Machine Learning</a>
+                        <a href="{% url 'posts:category_post_list' category_slug='science' %}" class="dropdown-item">Science</a>
+                        <a href="{% url 'posts:category_post_list' category_slug='sports' %}" class="dropdown-item">Sports</a>
+                        <a href="{% url 'posts:category_post_list' category_slug='test' %}" class="dropdown-item">Test</a>
+                        <a href="{% url 'posts:category_post_list' category_slug='web' %}" class="dropdown-item">Web</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
                 </li>
                 <li class="nav-item">
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                        <span class="search-icon"><svg class="svgIcon-use" width="25" height="25" viewbox="0 0 25 25"><path d="M20.067 18.933l-4.157-4.157a6 6 0 1 0-.884.884l4.157 4.157a.624.624 0 1 0 .884-.884zM6.5 11c0-2.62 2.13-4.75 4.75-4.75S16 8.38 16 11s-2.13 4.75-4.75 4.75S6.5 13.62 6.5 11z"></path></svg></span>
+                    <form class="form-inline my-2 my-lg-0" action="{% url 'posts:home' %}" method="get">
+                        <input class="form-control mr-sm-2" name="q" type="text" placeholder="Search">
+                        <span type="submit" class="search-icon"><svg class="svgIcon-use" width="25" height="25" viewbox="0 0 25 25"><path d="M20.067 18.933l-4.157-4.157a6 6 0 1 0-.884.884l4.157 4.157a.624.624 0 1 0 .884-.884zM6.5 11c0-2.62 2.13-4.75 4.75-4.75S16 8.38 16 11s-2.13 4.75-4.75 4.75S6.5 13.62 6.5 11z"></path></svg></span>
                     </form>
                 </li>
             </ul>
@@ -80,10 +93,17 @@
     {% if user.is_authenticated %}
     <ul class="navbar-nav ml-auto">
         <li  class="nav-item dropdown ml-auto">
-            <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><img src="{% static 'blog/mediumish/img/Default_Profile.png' %}" class="avatar" alt="Avatar" > {{user.username}}<b class="caret"></b></a>
-            <div class="dropdown-menu"> 
+            <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action">
+                {% if user.profile_picture %}
+                    <img class="avatar avatar-sm rounded-circle avatar-img" src="{{user.profile_picture.url}}" alt="commenter_profile_pic">
+                {% else %}
+                    <img src="{% static 'blog/mediumish/img/Default_Profile.png' %}" class="avatar" alt="Avatar" >
+                {% endif %}
+                {{user.username}}<b class="caret"></b>
+            </a>
+            <div class="dropdown-menu">
                 <a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a>
-                <a href="#" class="dropdown-item"><i class="fa fa-calendar-o"></i> Calendar</a>
+                <a href="{% url 'users:saved_posts' %}" class="dropdown-item"><i class="fa fa-bookmark"></i> Saved Posts</a>
                 <a href="{% url 'users:account_settings' %}" class="dropdown-item"><i class="fa fa-sliders"></i> Settings</a>
                 <div class="dropdown-divider"></div>
                 <a href="{% url 'users:user_logout' %}" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a>

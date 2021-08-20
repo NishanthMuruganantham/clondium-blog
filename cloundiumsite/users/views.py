@@ -14,6 +14,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.core.mail import EmailMessage
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import LoginForm, SignupForm, ProfileEditForm
 from .tokens import account_activation_token
@@ -179,6 +180,24 @@ class UserPostListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(UserPostListView, self).get_context_data(**kwargs)
         context['detailed_user'] = self.user
+        return context
+
+
+
+class UserSavedPostListView(LoginRequiredMixin,generic.ListView):
+    login_url           = '/users/login/'
+    redirect_field_name = "users:user_login"
+    model               = Post
+    context_object_name = "post_list"
+    template_name       = "posts/post_list.html"
+    ordering            = ["-created_time"]
+    
+    def get_queryset(self):
+            return self.request.user.favourite_posts.all().order_by("-created_time")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_heading'] = "Saved Posts"
         return context
 
 

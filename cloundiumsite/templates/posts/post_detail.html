@@ -390,20 +390,21 @@
                 </div>
                 <div class="mainheading mr-5 ml-4 card mb-4" style="padding-top:0px;padding-bottom:0px;">
                     <div class="card-header">Categories</div>
-                    <div class="card-body">
+                    <div class="card-body"> 
                         <div class="row">
                             <div class="col-sm-6">
                                 <ul class="list-unstyled mb-0">
-                                    <li><a href="#!">Web Design</a></li>
-                                    <li><a href="#!">HTML</a></li>
-                                    <li><a href="#!">Freebies</a></li>
+                                    <li><a href="{% url 'posts:category_post_list' category_slug='coding' %}">Coding</a></li>
+                                    <li><a href="{% url 'posts:category_post_list' category_slug='entertainment' %}">Entertainment</a></li>
+                                    <li><a href="{% url 'posts:category_post_list' category_slug='machine-learning' %}">Machine Learning</a></li>
+                                    <li><a href="{% url 'posts:category_post_list' category_slug='science' %}">Science</a></li>
                                 </ul>
                             </div>
                             <div class="col-sm-6">
                                 <ul class="list-unstyled mb-0">
-                                    <li><a href="#!">JavaScript</a></li>
-                                    <li><a href="#!">CSS</a></li>
-                                    <li><a href="#!">Tutorials</a></li>
+                                    <li><a href="{% url 'posts:category_post_list' category_slug='sports' %}">Sports</a></li>
+                                    <li><a href="{% url 'posts:category_post_list' category_slug='test' %}">Test</a></li>
+                                    <li><a href="{% url 'posts:category_post_list' category_slug='web' %}">Web</a></li>
                                 </ul>
                             </div>
                         </div>

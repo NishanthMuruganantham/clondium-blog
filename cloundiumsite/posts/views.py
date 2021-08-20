@@ -4,14 +4,12 @@ from django.views import generic
 from .models import Post, Comment, Reply, Category
 from .forms import PostCreationForm, CommentForm, ReplyForm
 from django.template.loader import render_to_string
-from django.http import JsonResponse, HttpResponse, Http404
+from django.http import JsonResponse, Http404
 from django.views import View
 from taggit.models import Tag
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
 
-import json
 
 def home(request):
     return render(request, 'users/user_about.html')
@@ -32,15 +30,11 @@ class PostListView(generic.ListView):
             )
         return Post.objects.all().order_by("-created_time")
     
-    # total_data = Post.objects.count()
-    # data = Post.objects.all().order_by('-id')[:3]
-    
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['total_data'] = self.total_data
-    #     context['data'] = self.data
-    #     return context
-        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_heading'] = "Latest Posts"
+        return context
+
 
 
 def post_list(request):
@@ -312,6 +306,7 @@ def add_to_favourites_post(request):
 
 
 class CommentReplyView(View):
+    
     def post(self, request, post_pk, comment_pk, *args, **kwargs):
         blog_post = Post.objects.get(pk=post_pk)
         parent_comment = Comment.objects.get(pk=comment_pk)
@@ -353,10 +348,11 @@ def tagged(request, slug):
     return render(request, 'posts/post_list.html', context)
 
 
+
 class CategoryPostListView(generic.ListView):
     model = Post
     context_object_name = "post_list"
-    template_name = "post_list.html"
+    template_name = "posts/post_list.html"
     ordering = ["-created_time"]
     
     def get_queryset(self):
@@ -370,4 +366,5 @@ class CategoryPostListView(generic.ListView):
     def get_context_data(self,**kwargs):
         context = super(CategoryPostListView, self).get_context_data(**kwargs)
         context['requested_category'] = self.kwargs.get('category_slug')
+        context['page_heading'] = 'Posts in {}'.format(self.category.name)
         return context

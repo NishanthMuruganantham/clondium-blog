@@ -26,11 +26,14 @@
         cursor: pointer;
     }
 </style>
-<div class="row">
-    <div class="col-md-2">
-        dwdw
+
+<div class="row mt-3">
+    <div class="col-md-1">
     </div>
-    <div class="col-md-7 col-md-offset-2 col-xs-12">
+    <div class="col-md-8 col-md-offset-2 col-xs-12">
+        <div class="section-title">
+            <h2 style="padding-bottom:8px;">{{page_heading}}</h2>
+        </div>
         {% for post in post_list %}
             <div class="card">
                 <div class="card-block">
