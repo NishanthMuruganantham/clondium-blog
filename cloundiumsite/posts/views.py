@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from .models import Post, Comment, Reply, Category
 from .forms import PostCreationForm, CommentForm, ReplyForm
@@ -32,7 +32,7 @@ class PostListView(generic.ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_heading'] = "Latest Posts"
+        context['page_heading'] = "Blog Feed"
         return context
 
 
@@ -107,6 +107,18 @@ class PostUpdateView(LoginRequiredMixin,generic.UpdateView):
     
     def get_queryset(self):
         return super().get_queryset().filter(author=self.request.user)
+
+
+
+class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
+    login_url           = '/users/login/'
+    redirect_field_name = "users:user_login"
+    model               = Post
+    success_url         = reverse_lazy('posts:home')
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(author = self.request.user)
+
 
 
 # Load More
@@ -308,17 +320,17 @@ def add_to_favourites_post(request):
 class CommentReplyView(View):
     
     def post(self, request, post_pk, comment_pk, *args, **kwargs):
-        blog_post = Post.objects.get(pk=post_pk)
-        parent_comment = Comment.objects.get(pk=comment_pk)
-        form = ReplyForm(request.POST)
+        blog_post       = Post.objects.get(pk=post_pk)
+        parent_comment  = Comment.objects.get(pk=comment_pk)
+        form            = ReplyForm(request.POST)
         
         if form.is_valid():
-            new_reply = form.save(commit=False)
-            new_reply.replier = request.user
-            new_reply.comment = parent_comment
+            new_reply           = form.save(commit=False)
+            new_reply.replier   = request.user
+            new_reply.comment   = parent_comment
             new_reply.save()
         
-        return redirect(reverse('posts:post_detail',kwargs={'pk':blog_post.pk,'slug':blog_post.slug}))
+        return redirect(reverse('posts:post_detail',kwargs = {'pk':blog_post.pk,'slug':blog_post.slug}))
 
 
 #* LOAD MORE REPLIES
@@ -368,3 +380,14 @@ class CategoryPostListView(generic.ListView):
         context['requested_category'] = self.kwargs.get('category_slug')
         context['page_heading'] = 'Posts in {}'.format(self.category.name)
         return context
+
+
+
+class CommentDeleteView(LoginRequiredMixin, generic.DeleteView):
+    login_url           = '/users/login/'
+    redirect_field_name = "users:user_login"
+    model               = Comment
+    success_url         = reverse_lazy('posts:home')
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(commenter = self.request.user)

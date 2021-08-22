@@ -184,7 +184,7 @@ class UserPostListView(generic.ListView):
 
 
 
-class UserSavedPostListView(LoginRequiredMixin,generic.ListView):
+class UserSavedPostListView(LoginRequiredMixin, generic.ListView):
     login_url           = '/users/login/'
     redirect_field_name = "users:user_login"
     model               = Post

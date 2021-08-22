@@ -12,6 +12,7 @@ urlpatterns = [
     path('posts/new', views.PostCreateView.as_view(), name = 'post_create'),
     path('posts/<pk>/<slug>/', views.PostDetailView.as_view(), name = 'post_detail'),
     path('posts/<pk>/<slug>/edit', views.PostUpdateView.as_view(), name = 'post_update'),
+    path('posts/<pk>/<slug>/delete', views.PostDeleteView.as_view(), name = 'post_delete'),
     path('post-like/', views.post_like_view, name = 'post_like'),
     path('comment-like/', views.comment_like_view, name = 'comment_like'),
     path('comment-dislike/', views.comment_dislike_view, name = 'comment_dislike'),
@@ -22,6 +23,7 @@ urlpatterns = [
     path('load-more-replies/', views.load_more_replies, name = 'load_more_replies'),
     path('tag/<slug:slug>/', views.tagged, name = "tagged"),
     path('category/<category_slug>/posts/', views.CategoryPostListView.as_view(), name = "category_post_list"),
+    path('posts/<int:post_pk>/comment/<int:comment_pk>/reply', views.CommentDeleteView.as_view(), name = "comment_delete"),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

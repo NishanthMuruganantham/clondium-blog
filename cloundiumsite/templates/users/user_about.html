@@ -64,34 +64,46 @@
                 <p style="padding-left:18px; padding-bottom:18px;">
                     Website: <a href="{{detailed_user.website}}" target="_blank">{{detailed_user.website}}</a>
                 </p>
-                <div class="row" style="padding-left:18px;padding-bottom:18px;">
-                    {% if detailed_user.facebook %}
-                        <div class="col-lg-2">
-                            <a href="https://www.facebook.com/{{detailed_user.facebook}}" target="_blank"><img src="https://img.icons8.com/color/35/000000/facebook.png"/></a>
-                        </div>
-                    {% endif %}
-                    <div class="col-lg-2">
-                        <a href="#"><img src="https://img.icons8.com/color/35/000000/instagram-new.png"/></a>
+                {% if detailed_user.facebook or detailed_user.instagram or detailed_user.twitter or detailed_user.google_plus or detailed_user.linkedin or detailed_user.github %}
+                    <div class="row" style="padding-left:18px;padding-bottom:18px;">
+                        {% if detailed_user.facebook %}
+                            <div class="col-lg-2">
+                                <a href="{{detailed_user.facebook}}" target="_blank"><img src="https://img.icons8.com/color/35/000000/facebook.png"/></a>
+                            </div>
+                        {% endif %}
+                        {% if detailed_user.instagram %}
+                            <div class="col-lg-2">
+                                <a href="{{detailed_user.instagram}}" target="_blank"><img src="https://img.icons8.com/color/35/000000/instagram-new.png"/></a>
+                            </div>
+                        {% endif %}
+                        {% if detailed_user.twitter %}
+                            <div class="col-lg-2">
+                                <a href="{{detailed_user.twitter}}" target="_blank"><img src="https://img.icons8.com/color/35/000000/twitter--v1.png"/></a>
+                            </div>
+                        {% endif %}
+                        {% if detailed_user.google_plus %}
+                            <div class="col-lg-2">
+                                <a href="{{detailed_user.google_plus}}" target="_blank"><img src="https://img.icons8.com/fluency/35/000000/google-plus-circled.png"/></a>
+                            </div>
+                        {% endif %}
+                        {% if detailed_user.linkedin %}
+                            <div class="col-lg-2">
+                                <a href="{{detailed_user.linkedin}}" target="_blank"><img src="https://img.icons8.com/color/35/000000/linkedin.png"/></a>
+                            </div>
+                        {% endif %}
+                        {% if detailed_user.github %}
+                            <div class="col-lg-2">
+                                <a href="{{detailed_user.github}}" target="_blank"><img src="https://img.icons8.com/ios-glyphs/35/000000/github.png"/></a>
+                            </div>
+                        {% endif %}
                     </div>
-                    <div class="col-lg-2">
-                        <img src="https://img.icons8.com/color/35/000000/twitter--v1.png"/>
-                    </div>
-                    <div class="col-lg-2">
-                        <img src="https://img.icons8.com/fluency/35/000000/google-plus-circled.png"/>
-                    </div>
-                    <div class="col-lg-2">
-                        <img src="https://img.icons8.com/color/35/000000/linkedin.png"/>
-                    </div>
-                    <div class="col-lg-2">
-                        <img src="https://img.icons8.com/ios-glyphs/35/000000/github.png"/>
-                    </div>
-                </div>
+                {% endif %}
             {% endif %}
             <hr>
         </div>
         <div class="panel">
             <div class="panel-heading">
-                <h3 class="panel-title">Activity Feed &nbsp;&nbsp; | &nbsp;&nbsp;<a href="#">Saved Posts</a></h3>
+                <h3 class="panel-title">Activity Feed</h3>
             </div>
             {% for post in post_list %}
                 <div class="card">

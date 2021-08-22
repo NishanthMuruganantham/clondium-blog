@@ -152,8 +152,36 @@
                             {% endif %}
                         </span>
 						<span class="post-date">{{post.created_time}}</span><span class="dot"></span><span class="post-read">{{post.get_readtime}} read</span>
-                        <a href="{% url 'posts:post_update' pk=post.pk slug=post.slug %}">Edit</a>
+                        {% if user.is_authenticated and user.pk == post.author.pk %}
+                            <a href="{% url 'posts:post_update' pk=post.pk slug=post.slug %}">Edit</a>
+                            <a href="#" data-toggle="modal" data-target="#exampleModal">Delete</a>
+                            <!-- Button trigger modal -->
+                            <!-- Modal FOR DELETE -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel"> Delete <i>{{post.title}}</i> ?</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete this post?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{% url 'posts:post_delete' pk=post.pk slug=post.slug %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="submit" value="Delete" class="btn btn-danger">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
 					</div>
+                    
 				</div>
 				<!-- End Top Menta -->
                 <br>
