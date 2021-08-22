@@ -1,32 +1,28 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views import generic
-from .models import Post, Comment, Reply, Category
-from .forms import PostCreationForm, CommentForm, ReplyForm
 from django.template.loader import render_to_string
 from django.http import JsonResponse, Http404
 from django.views import View
 from taggit.models import Tag
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-
-def home(request):
-    return render(request, 'users/user_about.html')
+from .models import Post, Comment, Reply, Category
+from .forms import PostCreationForm, CommentForm, ReplyForm
 
 
 
 class PostListView(generic.ListView):
-    model = Post
+    model               = Post
     context_object_name = "post_list"
-    template_name = 'posts/post_list.html'
-    ordering = ["-created_time"]
+    template_name       = 'posts/post_list.html'
+    ordering            = ["-created_time"]
     
     def get_queryset(self):
         searched_item = self.request.GET.get('q')
         if searched_item:
             return Post.objects.filter(
-                Q(title__icontains=searched_item) | Q(content__icontains=searched_item)
+                Q(title__icontains = searched_item) | Q(content__icontains = searched_item)
             )
         return Post.objects.all().order_by("-created_time")
     
@@ -37,20 +33,12 @@ class PostListView(generic.ListView):
 
 
 
-def post_list(request):
-    total_data = Post.objects.count()
-    data = Post.objects.all().order_by('-id')[:3]
-    return render(request, 'posts/post_list.html',{'data':data,'total_data':total_data})
-
-
-
-class PostCreateView(LoginRequiredMixin,generic.CreateView):
-    login_url = '/users/login/'
+class PostCreateView(LoginRequiredMixin, generic.CreateView):
+    login_url           = '/users/login/'
     redirect_field_name = "users:user_login"
-    model = Post
-    common_tags = Post.tags.most_common()[:4]
-    template_name = "posts/post_create.html"
-    form_class = PostCreationForm
+    model               = Post
+    template_name       = "posts/post_create.html"
+    form_class          = PostCreationForm
     
     def form_valid(self, form):
         self.object = form.save(commit = False)
@@ -58,10 +46,6 @@ class PostCreateView(LoginRequiredMixin,generic.CreateView):
         self.object.save()
         form.save_m2m()
         return super().form_valid(form)
-    
-    # def get_context_data(self, **kwargs):       
-    #     context = super().get_context_data(**kwargs)
-    #     context['common_tags'] = self.common_tags
 
 
 
@@ -70,40 +54,36 @@ class PostDetailView(generic.DetailView):
     template_name = "posts/post_detail.html"
     form = CommentForm
     
-    
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context         = super().get_context_data(**kwargs)
+        blog_post       = get_object_or_404(Post,pk=self.kwargs['pk'])
+        post_is_liked   = False
         
-        blog_post = get_object_or_404(Post,pk=self.kwargs['pk'])
-        post_is_liked = False
         if blog_post.likes.filter(id = self.request.user.id).exists():
             post_is_liked = True
-        print(post_is_liked)
         context['total_post_likes'] = blog_post.number_of_likes()
-        context['post_is_liked'] = post_is_liked
+        context['post_is_liked']    = post_is_liked
         
         if self.request.user.is_authenticated:
             context['comment_form'] = CommentForm(instance=self.request.user)
         return context
-    
     
     def post(self, request, *args, **kwargs):
         form = CommentForm(request.POST)
         blog_post = self.get_object()
         form.instance.commenter = request.user
         form.instance.post = blog_post
-        print('new comment added')
         form.save()
         return redirect(reverse('posts:post_detail',kwargs={'pk':blog_post.pk,'slug':blog_post.slug}))
 
 
 
 class PostUpdateView(LoginRequiredMixin,generic.UpdateView):
-    login_url = '/users/login/'
+    login_url           = '/users/login/'
     redirect_field_name = "users:user_login"
-    model = Post
-    template_name = "posts/post_update.html"
-    form_class = PostCreationForm
+    model               = Post
+    template_name       = "posts/post_update.html"
+    form_class          = PostCreationForm
     
     def get_queryset(self):
         return super().get_queryset().filter(author=self.request.user)
@@ -121,15 +101,7 @@ class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 
 
-# Load More
-def load_more_data(request):
-	offset=int(request.GET['offset'])
 
-	limit=int(request.GET['limit'])
-	data=Post.objects.all().order_by('-pk')[offset:offset+limit]
-	t=render_to_string('posts/sample.html',{'data':data})
-	return JsonResponse({'data':t}
-)
 
 
 
@@ -384,10 +356,31 @@ class CategoryPostListView(generic.ListView):
 
 
 class CommentDeleteView(LoginRequiredMixin, generic.DeleteView):
+    
     login_url           = '/users/login/'
     redirect_field_name = "users:user_login"
     model               = Comment
-    success_url         = reverse_lazy('posts:home')
     
     def get_queryset(self):
         return super().get_queryset().filter(commenter = self.request.user)
+    
+    def get_success_url(self):
+        post_pk     = self.kwargs.get('post_pk')
+        post_slug   = self.kwargs.get('post_slug')
+        return reverse_lazy('posts:post_detail',kwargs={'pk':post_pk,'slug':post_slug})
+
+
+
+class ReplyDeleteView(LoginRequiredMixin, generic.DeleteView):
+    
+    login_url           = '/users/login/'
+    redirect_field_name = "users:user_login"
+    model               = Reply
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(replier = self.request.user)
+    
+    def get_success_url(self):
+        post_pk     = self.kwargs.get('post_pk')
+        post_slug   = self.kwargs.get('post_slug')
+        return reverse_lazy('posts:post_detail',kwargs={'pk':post_pk,'slug':post_slug})
