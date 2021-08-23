@@ -12,6 +12,7 @@ from .forms import PostCreationForm, CommentForm, ReplyForm
 
 
 
+#* POST LIST VIEW AKA HOME VIEW
 class PostListView(generic.ListView):
     model               = Post
     context_object_name = "post_list"
@@ -49,6 +50,7 @@ class PostCreateView(LoginRequiredMixin, generic.CreateView):
 
 
 
+#* DETAILED POST VIEW
 class PostDetailView(generic.DetailView):
     model = Post
     template_name = "posts/post_detail.html"
@@ -78,6 +80,7 @@ class PostDetailView(generic.DetailView):
 
 
 
+#* POST EDIT VIEW
 class PostUpdateView(LoginRequiredMixin,generic.UpdateView):
     login_url           = '/users/login/'
     redirect_field_name = "users:user_login"
@@ -90,6 +93,7 @@ class PostUpdateView(LoginRequiredMixin,generic.UpdateView):
 
 
 
+#*POST DELETE VIEW
 class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
     login_url           = '/users/login/'
     redirect_field_name = "users:user_login"
@@ -101,35 +105,30 @@ class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 
 
-
-
-
-
-
-# Load More
+#* LOAD MORE COMMENTS
 def load_more_comments(request):
-    print("called")
+    
     post_id = int(request.GET['blog_post_id'])
-    print(post_id)
-    post = get_object_or_404(Post,pk=post_id)
-    offset=int(request.GET['offset'])
-    print(post)
-    print(offset)
-    limit=int(request.GET['limit'])
-    data=post.comments.all().order_by('id')[offset:offset+limit]
-    t=render_to_string('posts/sample2.html',{'data':data,'user':request.user})
-    return JsonResponse({'data':t}
-)
+    post    = get_object_or_404(Post,pk=post_id)
+    offset  = int(request.GET['offset'])
+    limit   = int(request.GET['limit'])
+    data    = post.comments.all().order_by('id')[offset:offset+limit]
+    html    = render_to_string('posts/sample2.html',{'data':data,'user':request.user})
+    
+    return JsonResponse(
+        {'data':html}
+    )
 
 
-# #* POST LIKE VIEW    
+
+#* POST LIKE VIEW    
 def post_like_view(request):
     
     if request.POST.get('action') == 'post':
         id = int(request.POST.get('post_id'))
-        post = get_object_or_404(Post,id=id)
-        liked = False
+        post = get_object_or_404(Post,id = id)
         
+        liked = False
         if post.likes.filter(id = request.user.id).exists():
             post.likes.remove(request.user)
         else:
@@ -142,15 +141,75 @@ def post_like_view(request):
 
 
 
+#* ADD FAVOURITE POST VIEW
+def add_to_favourites_post(request):
+    
+    if request.POST.get('action') == 'post':
+        post_id = int(request.POST.get('post_id'))
+        post = get_object_or_404(Post,id=post_id)
+        
+        favourite = False
+        if post.user_favourite.filter(id = request.user.id).exists():
+            post.user_favourite.remove(request.user)
+        else:
+            post.user_favourite.add(request.user)
+            favourite = True
+        
+        saves_count = post.number_of_saves()
+        
+        return JsonResponse(
+            {
+                'is_favourite':favourite,
+                'saves_count':saves_count,
+            }
+        )
+
+
+
+#* COMMENT REPLY VIEW
+class CommentReplyView(View):
+    
+    def post(self, request, post_pk, comment_pk, *args, **kwargs):
+        blog_post       = Post.objects.get(pk=post_pk)
+        parent_comment  = Comment.objects.get(pk=comment_pk)
+        form            = ReplyForm(request.POST)
+        
+        if form.is_valid():
+            new_reply           = form.save(commit=False)
+            new_reply.replier   = request.user
+            new_reply.comment   = parent_comment
+            new_reply.save()
+        
+        return redirect(reverse('posts:post_detail',kwargs = {'pk':blog_post.pk,'slug':blog_post.slug}))
+
+
+
+#* LOAD MORE REPLIES
+def load_more_replies(request):
+    
+    comment_id  = int(request.GET['post_comment_id'])
+    comment     = get_object_or_404(Comment,pk = comment_id)
+    offset      = int(request.GET['offset'])
+    limit       = int(request.GET['limit'])
+    
+    loaded_replies = comment.replies.all().order_by('id')[offset:offset+limit]
+    
+    html = render_to_string('posts/load_replies.html',{'loaded_replies':loaded_replies,'user':request.user,'comment_id':comment_id})
+    return JsonResponse(
+        {'data':html}
+    )
+
+
+
 #* COMMENT LIKE VIEW    
 def comment_like_view(request):
     
     if request.POST.get('action') == 'post':
-        id = int(request.POST.get('commentid'))
+        id      = int(request.POST.get('commentid'))
         comment = get_object_or_404(Comment,id = id)
-        liked = False
-        disliked = False
         
+        liked   = False
+        disliked = False
         if comment.likes.filter(id = request.user.id).exists():
             comment.likes.remove(request.user)
         else:
@@ -172,15 +231,16 @@ def comment_like_view(request):
         )
 
 
+
 #* COMMENT DISLIKE VIEW    
 def comment_dislike_view(request):
     
     if request.POST.get('action') == 'post':
         id = int(request.POST.get('commentid'))
-        comment = get_object_or_404(Comment,id=id)
+        comment = get_object_or_404(Comment,id = id)
+        
         liked = False
         disliked = False
-        
         if comment.dislikes.filter(id = request.user.id).exists():
             comment.dislikes.remove(request.user)
         else:
@@ -209,9 +269,9 @@ def reply_like_view(request):
     if request.POST.get('action') == 'post':
         id = int(request.POST.get('replyid'))
         reply = get_object_or_404(Reply,id = id)
+        
         liked = False
         disliked = False
-        
         if reply.likes.filter(id = request.user.id).exists():
             reply.likes.remove(request.user)
         else:
@@ -239,10 +299,10 @@ def reply_dislike_view(request):
     
     if request.POST.get('action') == 'post':
         id = int(request.POST.get('replyid'))
-        reply = get_object_or_404(Reply,id=id)
+        reply = get_object_or_404(Reply,id = id)
+        
         liked = False
         disliked = False
-        
         if reply.dislikes.filter(id = request.user.id).exists():
             reply.dislikes.remove(request.user)
         else:
@@ -265,74 +325,41 @@ def reply_dislike_view(request):
 
 
 
-
-#* ADD FAVOURITE POST VIEW
-def add_to_favourites_post(request):
-    if request.POST.get('action') == 'post':
-        post_id = int(request.POST.get('post_id'))
-        post = get_object_or_404(Post,id=post_id)
-        favourite = False
-        
-        if post.user_favourite.filter(id = request.user.id).exists():
-            post.user_favourite.remove(request.user)
-        else:
-            post.user_favourite.add(request.user)
-            favourite = True
-        
-        saves_count = post.number_of_saves()
-        
-        return JsonResponse(
-            {
-                'is_favourite':favourite,
-                'saves_count':saves_count,
-            }
-        )
-
-
-class CommentReplyView(View):
+#* COMMENT DELETE VIEW
+class CommentDeleteView(LoginRequiredMixin, generic.DeleteView):
     
-    def post(self, request, post_pk, comment_pk, *args, **kwargs):
-        blog_post       = Post.objects.get(pk=post_pk)
-        parent_comment  = Comment.objects.get(pk=comment_pk)
-        form            = ReplyForm(request.POST)
-        
-        if form.is_valid():
-            new_reply           = form.save(commit=False)
-            new_reply.replier   = request.user
-            new_reply.comment   = parent_comment
-            new_reply.save()
-        
-        return redirect(reverse('posts:post_detail',kwargs = {'pk':blog_post.pk,'slug':blog_post.slug}))
-
-
-#* LOAD MORE REPLIES
-def load_more_replies(request):
+    login_url           = '/users/login/'
+    redirect_field_name = "users:user_login"
+    model               = Comment
     
-    comment_id = int(request.GET['post_comment_id'])
-    comment = get_object_or_404(Comment,pk=comment_id)
-    offset=int(request.GET['offset'])
-    limit=int(request.GET['limit'])
-
-    loaded_replies=comment.replies.all().order_by('id')[offset:offset+limit]
-
-    t = render_to_string('posts/load_replies.html',{'loaded_replies':loaded_replies,'user':request.user,'comment_id':comment_id})
-    return JsonResponse({'data':t})
+    def get_queryset(self):
+        return super().get_queryset().filter(commenter = self.request.user)
+    
+    def get_success_url(self):
+        post_pk     = self.kwargs.get('post_pk')
+        post_slug   = self.kwargs.get('post_slug')
+        return reverse_lazy('posts:post_detail',kwargs={'pk':post_pk,'slug':post_slug})
 
 
 
-def tagged(request, slug):
-    tag = get_object_or_404(Tag, slug=slug)
-    common_tags = Post.tags.most_common()[:4]
-    posts = Post.objects.filter(tags=tag)
-    context = {
-        'tag':tag,
-        'common_tags':common_tags,
-        'posts':posts,
-    }
-    return render(request, 'posts/post_list.html', context)
+#* REPLY DELETE VIEW
+class ReplyDeleteView(LoginRequiredMixin, generic.DeleteView):
+    
+    login_url           = '/users/login/'
+    redirect_field_name = "users:user_login"
+    model               = Reply
+    
+    def get_queryset(self):
+        return super().get_queryset().filter(replier = self.request.user)
+    
+    def get_success_url(self):
+        post_pk     = self.kwargs.get('post_pk')
+        post_slug   = self.kwargs.get('post_slug')
+        return reverse_lazy('posts:post_detail',kwargs={'pk':post_pk,'slug':post_slug})
 
 
 
+#* CATEGORY POST LIST VIEW
 class CategoryPostListView(generic.ListView):
     model = Post
     context_object_name = "post_list"
@@ -355,32 +382,14 @@ class CategoryPostListView(generic.ListView):
 
 
 
-class CommentDeleteView(LoginRequiredMixin, generic.DeleteView):
-    
-    login_url           = '/users/login/'
-    redirect_field_name = "users:user_login"
-    model               = Comment
-    
-    def get_queryset(self):
-        return super().get_queryset().filter(commenter = self.request.user)
-    
-    def get_success_url(self):
-        post_pk     = self.kwargs.get('post_pk')
-        post_slug   = self.kwargs.get('post_slug')
-        return reverse_lazy('posts:post_detail',kwargs={'pk':post_pk,'slug':post_slug})
 
-
-
-class ReplyDeleteView(LoginRequiredMixin, generic.DeleteView):
-    
-    login_url           = '/users/login/'
-    redirect_field_name = "users:user_login"
-    model               = Reply
-    
-    def get_queryset(self):
-        return super().get_queryset().filter(replier = self.request.user)
-    
-    def get_success_url(self):
-        post_pk     = self.kwargs.get('post_pk')
-        post_slug   = self.kwargs.get('post_slug')
-        return reverse_lazy('posts:post_detail',kwargs={'pk':post_pk,'slug':post_slug})
+def tagged(request, slug):
+    tag         = get_object_or_404(Tag, slug=slug)
+    common_tags = Post.tags.most_common()[:4]
+    posts       = Post.objects.filter(tags=tag)
+    context = {
+        'tag':tag,
+        'common_tags':common_tags,
+        'posts':posts,
+    }
+    return render(request, 'posts/post_list.html', context)
