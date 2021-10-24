@@ -300,8 +300,8 @@ blockquote {
 		text-align:center;
 	}
 }
-.share,.share a {
-	color:rgba(0,0,0,.44);
+.share {
+	color:rgba(0, 0, 0, 0.973);
 	fill:rgba(0,0,0,.44);
 }
 .graybg {

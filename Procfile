@@ -1,0 +1,1 @@
+web: gunicorn cloundiumsite.wsgi --log-file -
