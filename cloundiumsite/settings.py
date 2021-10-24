@@ -82,9 +82,17 @@ WSGI_APPLICATION = 'cloundiumsite.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('db_name'),
+        'USER': os.getenv('db_user'),
+        'PASSWORD': os.getenv('db_password'),
+        'HOST': os.getenv('db_host'),
+        'PORT':'5432',
     }
 }
 
@@ -151,8 +159,8 @@ LOGOUT_REDIRECT_URL = "posts:home"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = os.getenv('email_username')
+EMAIL_HOST_PASSWORD = os.getenv('email_password')
 EMAIL_PORT = 587
 
 
